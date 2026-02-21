@@ -10,6 +10,39 @@ import type { Question } from '../types';
  * Transformations: color change, size change, rotation, addition/removal of elements
  */
 
+// Compact option SVG helpers for figure answer choices
+function opt(inner: string): string {
+  return `<svg viewBox="0 0 70 50" xmlns="http://www.w3.org/2000/svg">${inner}</svg>`;
+}
+function oCircle(r: number, fill: string, extra = ''): string {
+  return opt(`<circle cx="35" cy="25" r="${r}" fill="${fill}" stroke="#333" stroke-width="1.5"/>${extra}`);
+}
+function oSquare(s: number, fill: string, extra = ''): string {
+  const x = 35 - s / 2, y = 25 - s / 2;
+  return opt(`<rect x="${x}" y="${y}" width="${s}" height="${s}" fill="${fill}" stroke="#333" stroke-width="1.5"/>${extra}`);
+}
+function oTriangle(s: number, fill: string, dir: 'up' | 'down' = 'up', extra = ''): string {
+  if (dir === 'up') {
+    return opt(`<polygon points="35,${25 - s * 0.45} ${35 - s / 2},${25 + s * 0.35} ${35 + s / 2},${25 + s * 0.35}" fill="${fill}" stroke="#333" stroke-width="1.5"/>${extra}`);
+  }
+  return opt(`<polygon points="35,${25 + s * 0.45} ${35 - s / 2},${25 - s * 0.35} ${35 + s / 2},${25 - s * 0.35}" fill="${fill}" stroke="#333" stroke-width="1.5"/>${extra}`);
+}
+function oDiamond(s: number, fill: string, extra = ''): string {
+  return opt(`<polygon points="35,${25 - s / 2} ${35 + s / 2},25 35,${25 + s / 2} ${35 - s / 2},25" fill="${fill}" stroke="#333" stroke-width="1.5"/>${extra}`);
+}
+function oArrow(dir: 'up' | 'down' | 'left' | 'right', color: string): string {
+  const m: Record<string, string> = {
+    up: `<polygon points="35,8 20,30 50,30" fill="${color}" stroke="#333" stroke-width="1.5"/>`,
+    down: `<polygon points="35,42 20,20 50,20" fill="${color}" stroke="#333" stroke-width="1.5"/>`,
+    left: `<polygon points="10,25 32,10 32,40" fill="${color}" stroke="#333" stroke-width="1.5"/>`,
+    right: `<polygon points="60,25 38,10 38,40" fill="${color}" stroke="#333" stroke-width="1.5"/>`,
+  };
+  return opt(m[dir]);
+}
+function oEmoji(text: string, fs = 24): string {
+  return opt(`<text x="35" y="${25 + fs * 0.35}" text-anchor="middle" font-size="${fs}">${text}</text>`);
+}
+
 export const figureMatrices: Question[] = [
   // ===== EASY =====
   {
@@ -35,10 +68,10 @@ export const figureMatrices: Question[] = [
       <text x="150" y="230" text-anchor="middle" font-size="24" fill="#E65100">→</text>
     </svg>`,
     options: [
-      { id: 'a', label: 'Large red circle' },
-      { id: 'b', label: 'Small red circle' },
-      { id: 'c', label: 'Large blue circle' },
-      { id: 'd', label: 'Small blue square' },
+      { id: 'a', label: 'Large red circle', visual: oCircle(18, '#F44336') },
+      { id: 'b', label: 'Small red circle', visual: oCircle(10, '#F44336') },
+      { id: 'c', label: 'Large blue circle', visual: oCircle(18, '#2196F3') },
+      { id: 'd', label: 'Small blue square', visual: oSquare(18, '#2196F3') },
     ],
     correctAnswerId: 'a',
     explanation: 'The top row shows a small blue circle becoming a large blue circle (size increases). So the small red circle should become a large red circle.',
@@ -67,10 +100,10 @@ export const figureMatrices: Question[] = [
       <text x="150" y="230" text-anchor="middle" font-size="24" fill="#E65100">→</text>
     </svg>`,
     options: [
-      { id: 'a', label: 'Red triangle' },
-      { id: 'b', label: 'Blue triangle' },
-      { id: 'c', label: 'Red square' },
-      { id: 'd', label: 'Green triangle' },
+      { id: 'a', label: 'Red triangle', visual: oTriangle(30, '#F44336') },
+      { id: 'b', label: 'Blue triangle', visual: oTriangle(30, '#2196F3') },
+      { id: 'c', label: 'Red square', visual: oSquare(24, '#F44336') },
+      { id: 'd', label: 'Green triangle', visual: oTriangle(30, '#4CAF50') },
     ],
     correctAnswerId: 'a',
     explanation: 'The top row: blue square becomes red square (color changes to red, shape stays). So blue triangle becomes red triangle.',
@@ -99,10 +132,10 @@ export const figureMatrices: Question[] = [
       <text x="150" y="230" text-anchor="middle" font-size="24" fill="#E65100">→</text>
     </svg>`,
     options: [
-      { id: 'a', label: '1 heart' },
-      { id: 'b', label: '2 hearts' },
-      { id: 'c', label: '3 hearts' },
-      { id: 'd', label: '2 stars' },
+      { id: 'a', label: '1 heart', visual: oEmoji('❤️') },
+      { id: 'b', label: '2 hearts', visual: oEmoji('❤️❤️') },
+      { id: 'c', label: '3 hearts', visual: oEmoji('❤️❤️❤️', 18) },
+      { id: 'd', label: '2 stars', visual: oEmoji('⭐⭐') },
     ],
     correctAnswerId: 'b',
     explanation: 'Top row: 1 star becomes 2 stars (quantity doubles). So 1 heart becomes 2 hearts.',
@@ -131,10 +164,10 @@ export const figureMatrices: Question[] = [
       <text x="150" y="230" text-anchor="middle" font-size="24" fill="#E65100">→</text>
     </svg>`,
     options: [
-      { id: 'a', label: 'Empty square (outline only)' },
-      { id: 'b', label: 'Filled square' },
-      { id: 'c', label: 'Empty circle' },
-      { id: 'd', label: 'Filled circle' },
+      { id: 'a', label: 'Empty square (outline only)', visual: oSquare(24, 'white') },
+      { id: 'b', label: 'Filled square', visual: oSquare(24, '#333') },
+      { id: 'c', label: 'Empty circle', visual: oCircle(14, 'white') },
+      { id: 'd', label: 'Filled circle', visual: oCircle(14, '#333') },
     ],
     correctAnswerId: 'a',
     explanation: 'Top row: filled circle becomes empty circle (fill removed). So filled square becomes empty square.',
@@ -164,10 +197,10 @@ export const figureMatrices: Question[] = [
       <text x="150" y="230" text-anchor="middle" font-size="24" fill="#E65100">→</text>
     </svg>`,
     options: [
-      { id: 'a', label: 'Square with dot inside' },
-      { id: 'b', label: 'Empty square' },
-      { id: 'c', label: 'Circle with dot inside' },
-      { id: 'd', label: 'Square with line inside' },
+      { id: 'a', label: 'Square with dot inside', visual: oSquare(24, '#FF9800', '<circle cx="35" cy="25" r="3" fill="#333"/>') },
+      { id: 'b', label: 'Empty square', visual: oSquare(24, '#FF9800') },
+      { id: 'c', label: 'Circle with dot inside', visual: oCircle(14, '#4CAF50', '<circle cx="35" cy="25" r="3" fill="#333"/>') },
+      { id: 'd', label: 'Square with line inside', visual: oSquare(24, '#FF9800', '<line x1="23" y1="25" x2="47" y2="25" stroke="#333" stroke-width="2"/>') },
     ],
     correctAnswerId: 'a',
     explanation: 'Top row: green circle gets a dot inside. So the orange square should also get a dot inside.',
@@ -196,10 +229,10 @@ export const figureMatrices: Question[] = [
       <text x="150" y="230" text-anchor="middle" font-size="24" fill="#E65100">→</text>
     </svg>`,
     options: [
-      { id: 'a', label: 'Downward arrow ⬇️' },
-      { id: 'b', label: 'Upward arrow ⬆️' },
-      { id: 'c', label: 'Left arrow ⬅️' },
-      { id: 'd', label: 'Right arrow ➡️' },
+      { id: 'a', label: 'Downward arrow ⬇️', visual: oArrow('down', '#9C27B0') },
+      { id: 'b', label: 'Upward arrow ⬆️', visual: oArrow('up', '#9C27B0') },
+      { id: 'c', label: 'Left arrow ⬅️', visual: oArrow('left', '#9C27B0') },
+      { id: 'd', label: 'Right arrow ➡️', visual: oArrow('right', '#9C27B0') },
     ],
     correctAnswerId: 'a',
     explanation: 'Top row: upward triangle flips to downward triangle (flipped upside down). So upward arrow becomes downward arrow.',
@@ -229,10 +262,10 @@ export const figureMatrices: Question[] = [
       <text x="150" y="230" text-anchor="middle" font-size="24" fill="#E65100">→</text>
     </svg>`,
     options: [
-      { id: 'a', label: 'Large red square' },
-      { id: 'b', label: 'Large blue square' },
-      { id: 'c', label: 'Small red square' },
-      { id: 'd', label: 'Large red circle' },
+      { id: 'a', label: 'Large red square', visual: oSquare(28, '#F44336') },
+      { id: 'b', label: 'Large blue square', visual: oSquare(28, '#2196F3') },
+      { id: 'c', label: 'Small red square', visual: oSquare(16, '#F44336') },
+      { id: 'd', label: 'Large red circle', visual: oCircle(16, '#F44336') },
     ],
     correctAnswerId: 'a',
     explanation: 'Top row: small blue circle → large red circle. TWO changes: size gets bigger AND color changes to red. So small blue square → large red square.',
@@ -262,10 +295,10 @@ export const figureMatrices: Question[] = [
       <text x="150" y="230" text-anchor="middle" font-size="24" fill="#E65100">→</text>
     </svg>`,
     options: [
-      { id: 'a', label: '2 small squares' },
-      { id: 'b', label: '1 large square' },
-      { id: 'c', label: '2 large squares' },
-      { id: 'd', label: '1 small square' },
+      { id: 'a', label: '2 small squares', visual: opt('<rect x="14" y="17" width="16" height="16" fill="#FF9800" stroke="#333" stroke-width="1.5"/><rect x="40" y="17" width="16" height="16" fill="#FF9800" stroke="#333" stroke-width="1.5"/>') },
+      { id: 'b', label: '1 large square', visual: oSquare(28, '#FF9800') },
+      { id: 'c', label: '2 large squares', visual: opt('<rect x="6" y="10" width="24" height="24" fill="#FF9800" stroke="#333" stroke-width="1.5"/><rect x="40" y="10" width="24" height="24" fill="#FF9800" stroke="#333" stroke-width="1.5"/>') },
+      { id: 'd', label: '1 small square', visual: oSquare(16, '#FF9800') },
     ],
     correctAnswerId: 'a',
     explanation: 'Top row: 1 big circle becomes 2 small circles (splits into two, size shrinks). So 1 big square becomes 2 small squares.',
@@ -296,10 +329,10 @@ export const figureMatrices: Question[] = [
       <text x="150" y="230" text-anchor="middle" font-size="24" fill="#E65100">→</text>
     </svg>`,
     options: [
-      { id: 'a', label: 'Square with vertical line' },
-      { id: 'b', label: 'Square with horizontal line' },
-      { id: 'c', label: 'Circle with vertical line' },
-      { id: 'd', label: 'Square with diagonal line' },
+      { id: 'a', label: 'Square with vertical line', visual: oSquare(26, '#C8E6C9', '<line x1="35" y1="12" x2="35" y2="38" stroke="#333" stroke-width="2"/>') },
+      { id: 'b', label: 'Square with horizontal line', visual: oSquare(26, '#C8E6C9', '<line x1="22" y1="25" x2="48" y2="25" stroke="#333" stroke-width="2"/>') },
+      { id: 'c', label: 'Circle with vertical line', visual: oCircle(15, '#E1BEE7', '<line x1="35" y1="10" x2="35" y2="40" stroke="#333" stroke-width="2"/>') },
+      { id: 'd', label: 'Square with diagonal line', visual: oSquare(26, '#C8E6C9', '<line x1="22" y1="12" x2="48" y2="38" stroke="#333" stroke-width="2"/>') },
     ],
     correctAnswerId: 'a',
     explanation: 'Top row: the line inside the circle rotates from horizontal to vertical. So the line inside the square should also rotate from horizontal to vertical.',
@@ -334,10 +367,10 @@ export const figureMatrices: Question[] = [
       <text x="150" y="230" text-anchor="middle" font-size="24" fill="#E65100">→</text>
     </svg>`,
     options: [
-      { id: 'a', label: '3 squares' },
-      { id: 'b', label: '2 squares' },
-      { id: 'c', label: '4 squares' },
-      { id: 'd', label: '1 square' },
+      { id: 'a', label: '3 squares', visual: opt('<rect x="7" y="17" width="14" height="14" fill="#3F51B5" stroke="#333" stroke-width="1"/><rect x="28" y="17" width="14" height="14" fill="#3F51B5" stroke="#333" stroke-width="1"/><rect x="49" y="17" width="14" height="14" fill="#3F51B5" stroke="#333" stroke-width="1"/>') },
+      { id: 'b', label: '2 squares', visual: opt('<rect x="14" y="17" width="16" height="16" fill="#3F51B5" stroke="#333" stroke-width="1"/><rect x="40" y="17" width="16" height="16" fill="#3F51B5" stroke="#333" stroke-width="1"/>') },
+      { id: 'c', label: '4 squares', visual: opt('<rect x="3" y="17" width="12" height="12" fill="#3F51B5" stroke="#333" stroke-width="1"/><rect x="20" y="17" width="12" height="12" fill="#3F51B5" stroke="#333" stroke-width="1"/><rect x="37" y="17" width="12" height="12" fill="#3F51B5" stroke="#333" stroke-width="1"/><rect x="54" y="17" width="12" height="12" fill="#3F51B5" stroke="#333" stroke-width="1"/>') },
+      { id: 'd', label: '1 square', visual: oSquare(16, '#3F51B5') },
     ],
     correctAnswerId: 'a',
     explanation: 'Top row: 3 dots become 4 dots (add 1). So 2 squares become 3 squares (add 1).',
@@ -367,10 +400,10 @@ export const figureMatrices: Question[] = [
       <text x="150" y="230" text-anchor="middle" font-size="24" fill="#E65100">→</text>
     </svg>`,
     options: [
-      { id: 'a', label: 'Fully shaded triangle' },
-      { id: 'b', label: 'Half shaded triangle' },
-      { id: 'c', label: 'Fully shaded circle' },
-      { id: 'd', label: 'Empty triangle' },
+      { id: 'a', label: 'Fully shaded triangle', visual: oTriangle(32, '#333') },
+      { id: 'b', label: 'Half shaded triangle', visual: opt('<polygon points="35,7 18,40 52,40" fill="white" stroke="#333" stroke-width="1.5"/><polygon points="35,7 35,40 52,40" fill="#333"/>') },
+      { id: 'c', label: 'Fully shaded circle', visual: oCircle(15, '#333') },
+      { id: 'd', label: 'Empty triangle', visual: oTriangle(32, 'white') },
     ],
     correctAnswerId: 'a',
     explanation: 'Top row: half-shaded circle becomes fully-shaded circle (shading completes). So half-shaded triangle becomes fully-shaded triangle.',
@@ -403,10 +436,10 @@ export const figureMatrices: Question[] = [
       <text x="150" y="230" text-anchor="middle" font-size="24" fill="#E65100">→</text>
     </svg>`,
     options: [
-      { id: 'a', label: 'Green square with 3 stripes' },
-      { id: 'b', label: 'Green square with 1 stripe' },
-      { id: 'c', label: 'Blue circle with 3 stripes' },
-      { id: 'd', label: 'Green square with 2 stripes' },
+      { id: 'a', label: 'Green square with 3 stripes', visual: oSquare(26, '#C8E6C9', '<line x1="27" y1="12" x2="27" y2="38" stroke="#333" stroke-width="1.5"/><line x1="35" y1="12" x2="35" y2="38" stroke="#333" stroke-width="1.5"/><line x1="43" y1="12" x2="43" y2="38" stroke="#333" stroke-width="1.5"/>') },
+      { id: 'b', label: 'Green square with 1 stripe', visual: oSquare(26, '#C8E6C9', '<line x1="35" y1="12" x2="35" y2="38" stroke="#333" stroke-width="1.5"/>') },
+      { id: 'c', label: 'Blue circle with 3 stripes', visual: oCircle(15, '#BBDEFB', '<line x1="27" y1="12" x2="27" y2="38" stroke="#333" stroke-width="1.5"/><line x1="35" y1="12" x2="35" y2="38" stroke="#333" stroke-width="1.5"/><line x1="43" y1="12" x2="43" y2="38" stroke="#333" stroke-width="1.5"/>') },
+      { id: 'd', label: 'Green square with 2 stripes', visual: oSquare(26, '#C8E6C9', '<line x1="31" y1="12" x2="31" y2="38" stroke="#333" stroke-width="1.5"/><line x1="39" y1="12" x2="39" y2="38" stroke="#333" stroke-width="1.5"/>') },
     ],
     correctAnswerId: 'a',
     explanation: 'Top row: circle goes from 1 stripe to 2 stripes (add 1 stripe). So square goes from 2 stripes to 3 stripes (add 1 stripe).',
@@ -436,10 +469,10 @@ export const figureMatrices: Question[] = [
       <text x="150" y="230" text-anchor="middle" font-size="24" fill="#E65100">→</text>
     </svg>`,
     options: [
-      { id: 'a', label: 'Large white triangle with dot' },
-      { id: 'b', label: 'Large black triangle' },
-      { id: 'c', label: 'Small white triangle with dot' },
-      { id: 'd', label: 'Large white triangle' },
+      { id: 'a', label: 'Large white triangle with dot', visual: oTriangle(36, 'white', 'up', '<circle cx="35" cy="28" r="3" fill="#333"/>') },
+      { id: 'b', label: 'Large black triangle', visual: oTriangle(36, '#333') },
+      { id: 'c', label: 'Small white triangle with dot', visual: oTriangle(22, 'white', 'up', '<circle cx="35" cy="26" r="2.5" fill="#333"/>') },
+      { id: 'd', label: 'Large white triangle', visual: oTriangle(36, 'white') },
     ],
     correctAnswerId: 'a',
     explanation: 'THREE changes: size grows, fill changes to white, and a dot is added inside. Small black triangle → large white triangle with dot.',
@@ -471,10 +504,10 @@ export const figureMatrices: Question[] = [
       <text x="150" y="230" text-anchor="middle" font-size="24" fill="#E65100">→</text>
     </svg>`,
     options: [
-      { id: 'a', label: 'Green circle inside yellow triangle' },
-      { id: 'b', label: 'Yellow triangle inside green circle' },
-      { id: 'c', label: 'Green triangle inside yellow circle' },
-      { id: 'd', label: 'Yellow circle inside green triangle' },
+      { id: 'a', label: 'Green circle inside yellow triangle', visual: opt('<polygon points="35,5 10,42 60,42" fill="#FFC107" stroke="#333" stroke-width="1.5"/><circle cx="35" cy="30" r="11" fill="#4CAF50" stroke="#333" stroke-width="1.5"/>') },
+      { id: 'b', label: 'Yellow triangle inside green circle', visual: opt('<circle cx="35" cy="25" r="18" fill="#4CAF50" stroke="#333" stroke-width="1.5"/><polygon points="35,12 24,35 46,35" fill="#FFC107" stroke="#333" stroke-width="1"/>') },
+      { id: 'c', label: 'Green triangle inside yellow circle', visual: opt('<circle cx="35" cy="25" r="18" fill="#FFC107" stroke="#333" stroke-width="1.5"/><polygon points="35,12 24,35 46,35" fill="#4CAF50" stroke="#333" stroke-width="1"/>') },
+      { id: 'd', label: 'Yellow circle inside green triangle', visual: opt('<polygon points="35,5 10,42 60,42" fill="#4CAF50" stroke="#333" stroke-width="1.5"/><circle cx="35" cy="30" r="11" fill="#FFC107" stroke="#333" stroke-width="1.5"/>') },
     ],
     correctAnswerId: 'a',
     explanation: 'The rule is: the inside and outside shapes swap! Circle inside square → square inside circle. Triangle inside circle → circle inside triangle.',
@@ -503,10 +536,10 @@ export const figureMatrices: Question[] = [
       <text x="150" y="230" text-anchor="middle" font-size="24" fill="#E65100">→</text>
     </svg>`,
     options: [
-      { id: 'a', label: 'Arrow pointing left' },
-      { id: 'b', label: 'Arrow pointing right' },
-      { id: 'c', label: 'Arrow pointing up' },
-      { id: 'd', label: 'Arrow pointing down' },
+      { id: 'a', label: 'Arrow pointing left', visual: oArrow('left', '#009688') },
+      { id: 'b', label: 'Arrow pointing right', visual: oArrow('right', '#673AB7') },
+      { id: 'c', label: 'Arrow pointing up', visual: oArrow('up', '#009688') },
+      { id: 'd', label: 'Arrow pointing down', visual: oArrow('down', '#673AB7') },
     ],
     correctAnswerId: 'a',
     explanation: 'The arrow rotates 90 degrees clockwise: right → down. So up → left (also 90 degrees clockwise).',
@@ -539,10 +572,10 @@ export const figureMatrices: Question[] = [
       <text x="150" y="230" text-anchor="middle" font-size="24" fill="#E65100">→</text>
     </svg>`,
     options: [
-      { id: 'a', label: '3 circles, all colored' },
-      { id: 'b', label: '3 circles, 2 colored' },
-      { id: 'c', label: '2 circles, all colored' },
-      { id: 'd', label: '3 circles, 1 colored' },
+      { id: 'a', label: '3 circles, all colored', visual: opt('<circle cx="15" cy="25" r="10" fill="#3F51B5" stroke="#333" stroke-width="1.5"/><circle cx="35" cy="25" r="10" fill="#3F51B5" stroke="#333" stroke-width="1.5"/><circle cx="55" cy="25" r="10" fill="#3F51B5" stroke="#333" stroke-width="1.5"/>') },
+      { id: 'b', label: '3 circles, 2 colored', visual: opt('<circle cx="15" cy="25" r="10" fill="#3F51B5" stroke="#333" stroke-width="1.5"/><circle cx="35" cy="25" r="10" fill="#3F51B5" stroke="#333" stroke-width="1.5"/><circle cx="55" cy="25" r="10" fill="white" stroke="#333" stroke-width="1.5"/>') },
+      { id: 'c', label: '2 circles, all colored', visual: opt('<circle cx="22" cy="25" r="11" fill="#FF5722" stroke="#333" stroke-width="1.5"/><circle cx="48" cy="25" r="11" fill="#FF5722" stroke="#333" stroke-width="1.5"/>') },
+      { id: 'd', label: '3 circles, 1 colored', visual: opt('<circle cx="15" cy="25" r="10" fill="#3F51B5" stroke="#333" stroke-width="1.5"/><circle cx="35" cy="25" r="10" fill="white" stroke="#333" stroke-width="1.5"/><circle cx="55" cy="25" r="10" fill="white" stroke="#333" stroke-width="1.5"/>') },
     ],
     correctAnswerId: 'b',
     explanation: 'Top row: 1 of 2 colored → 2 of 2 colored (+1 filled). Bottom: 1 of 3 colored → 2 of 3 colored (+1 filled).',
@@ -576,10 +609,10 @@ export const figureMatrices: Question[] = [
       <text x="150" y="230" text-anchor="middle" font-size="24" fill="#E65100">→</text>
     </svg>`,
     options: [
-      { id: 'a', label: 'Large red square with cross' },
-      { id: 'b', label: 'Large red circle with cross' },
-      { id: 'c', label: 'Large blue square with cross' },
-      { id: 'd', label: 'Large green triangle with cross' },
+      { id: 'a', label: 'Large red square with cross', visual: oSquare(28, '#F44336', '<line x1="21" y1="11" x2="49" y2="39" stroke="white" stroke-width="2"/><line x1="49" y1="11" x2="21" y2="39" stroke="white" stroke-width="2"/>') },
+      { id: 'b', label: 'Large red circle with cross', visual: oCircle(16, '#F44336', '<line x1="23" y1="13" x2="47" y2="37" stroke="white" stroke-width="2"/><line x1="47" y1="13" x2="23" y2="37" stroke="white" stroke-width="2"/>') },
+      { id: 'c', label: 'Large blue square with cross', visual: oSquare(28, '#2196F3', '<line x1="21" y1="11" x2="49" y2="39" stroke="white" stroke-width="2"/><line x1="49" y1="11" x2="21" y2="39" stroke="white" stroke-width="2"/>') },
+      { id: 'd', label: 'Large green triangle with cross', visual: oTriangle(34, '#4CAF50', 'up', '<line x1="26" y1="18" x2="44" y2="36" stroke="white" stroke-width="2"/><line x1="44" y1="18" x2="26" y2="36" stroke="white" stroke-width="2"/>') },
     ],
     correctAnswerId: 'a',
     explanation: 'The rule: shape changes to square→circle→triangle→square (cycles), color swaps red↔blue, size grows, cross stays. So blue triangle → red square (large, with cross).',

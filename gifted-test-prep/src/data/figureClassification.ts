@@ -10,6 +10,47 @@ import type { Question } from '../types';
  * presence of internal elements, orientation.
  */
 
+// Compact option SVG helpers for figure answer choices
+function opt(inner: string): string {
+  return `<svg viewBox="0 0 70 50" xmlns="http://www.w3.org/2000/svg">${inner}</svg>`;
+}
+function oCircle(r: number, fill: string, extra = ''): string {
+  return opt(`<circle cx="35" cy="25" r="${r}" fill="${fill}" stroke="#333" stroke-width="1.5"/>${extra}`);
+}
+function oSquare(s: number, fill: string, extra = ''): string {
+  const x = 35 - s / 2, y = 25 - s / 2;
+  return opt(`<rect x="${x}" y="${y}" width="${s}" height="${s}" fill="${fill}" stroke="#333" stroke-width="1.5"/>${extra}`);
+}
+function oRect(w: number, h: number, fill: string): string {
+  return opt(`<rect x="${35 - w / 2}" y="${25 - h / 2}" width="${w}" height="${h}" fill="${fill}" stroke="#333" stroke-width="1.5"/>`);
+}
+function oTriangle(s: number, fill: string, dir: 'up' | 'down' = 'up', extra = ''): string {
+  if (dir === 'up') {
+    return opt(`<polygon points="35,${25 - s * 0.45} ${35 - s / 2},${25 + s * 0.35} ${35 + s / 2},${25 + s * 0.35}" fill="${fill}" stroke="#333" stroke-width="1.5"/>${extra}`);
+  }
+  return opt(`<polygon points="35,${25 + s * 0.45} ${35 - s / 2},${25 - s * 0.35} ${35 + s / 2},${25 - s * 0.35}" fill="${fill}" stroke="#333" stroke-width="1.5"/>${extra}`);
+}
+function oDiamond(s: number, fill: string, extra = ''): string {
+  return opt(`<polygon points="35,${25 - s / 2} ${35 + s / 2},25 35,${25 + s / 2} ${35 - s / 2},25" fill="${fill}" stroke="#333" stroke-width="1.5"/>${extra}`);
+}
+function oPentagon(r: number, fill: string, extra = ''): string {
+  const pts = [0, 1, 2, 3, 4].map(i => {
+    const a = (i * 72 - 90) * Math.PI / 180;
+    return `${35 + r * Math.cos(a)},${25 + r * Math.sin(a)}`;
+  }).join(' ');
+  return opt(`<polygon points="${pts}" fill="${fill}" stroke="#333" stroke-width="1.5"/>${extra}`);
+}
+function oHexagon(r: number, fill: string, extra = ''): string {
+  const pts = [0, 1, 2, 3, 4, 5].map(i => {
+    const a = (i * 60 - 90) * Math.PI / 180;
+    return `${35 + r * Math.cos(a)},${25 + r * Math.sin(a)}`;
+  }).join(' ');
+  return opt(`<polygon points="${pts}" fill="${fill}" stroke="#333" stroke-width="1.5"/>${extra}`);
+}
+function oEmoji(text: string, fs = 24): string {
+  return opt(`<text x="35" y="${25 + fs * 0.35}" text-anchor="middle" font-size="${fs}">${text}</text>`);
+}
+
 export const figureClassification: Question[] = [
   // ===== EASY =====
   {
@@ -31,10 +72,10 @@ export const figureClassification: Question[] = [
       <line x1="20" y1="138" x2="380" y2="138" stroke="#E0E0E0" stroke-width="1" stroke-dasharray="4,4"/>
     </svg>`,
     options: [
-      { id: 'a', label: 'Yellow circle' },
-      { id: 'b', label: 'Red square' },
-      { id: 'c', label: 'Blue triangle' },
-      { id: 'd', label: 'Green diamond' },
+      { id: 'a', label: 'Yellow circle', visual: oCircle(14, '#FFC107') },
+      { id: 'b', label: 'Red square', visual: oSquare(22, '#F44336') },
+      { id: 'c', label: 'Blue triangle', visual: oTriangle(28, '#2196F3') },
+      { id: 'd', label: 'Green diamond', visual: oDiamond(24, '#4CAF50') },
     ],
     correctAnswerId: 'a',
     explanation: 'All three shapes in the group are circles (different sizes and colors). The yellow circle is also a circle, so it belongs!',
@@ -59,10 +100,10 @@ export const figureClassification: Question[] = [
       <line x1="20" y1="138" x2="380" y2="138" stroke="#E0E0E0" stroke-width="1" stroke-dasharray="4,4"/>
     </svg>`,
     options: [
-      { id: 'a', label: 'Blue circle' },
-      { id: 'b', label: 'Red diamond' },
-      { id: 'c', label: 'Green square' },
-      { id: 'd', label: 'Yellow triangle' },
+      { id: 'a', label: 'Blue circle', visual: oCircle(14, '#2196F3') },
+      { id: 'b', label: 'Red diamond', visual: oDiamond(24, '#F44336') },
+      { id: 'c', label: 'Green square', visual: oSquare(22, '#4CAF50') },
+      { id: 'd', label: 'Yellow triangle', visual: oTriangle(28, '#FFC107') },
     ],
     correctAnswerId: 'b',
     explanation: 'All three shapes are RED (but different shapes: square, circle, triangle). The red diamond is also red, so it belongs!',
@@ -87,10 +128,10 @@ export const figureClassification: Question[] = [
       <line x1="20" y1="138" x2="380" y2="138" stroke="#E0E0E0" stroke-width="1" stroke-dasharray="4,4"/>
     </svg>`,
     options: [
-      { id: 'a', label: 'Large blue star' },
-      { id: 'b', label: 'Tiny red circle' },
-      { id: 'c', label: 'Tiny blue square' },
-      { id: 'd', label: 'Tiny green triangle' },
+      { id: 'a', label: 'Large blue star', visual: oEmoji('⭐', 28) },
+      { id: 'b', label: 'Tiny red circle', visual: oCircle(7, '#F44336') },
+      { id: 'c', label: 'Tiny blue square', visual: oSquare(12, '#2196F3') },
+      { id: 'd', label: 'Tiny green triangle', visual: oTriangle(16, '#4CAF50') },
     ],
     correctAnswerId: 'a',
     explanation: 'All three shapes are LARGE. The large blue star is also large, so it belongs with the group!',
@@ -115,10 +156,10 @@ export const figureClassification: Question[] = [
       <line x1="20" y1="138" x2="380" y2="138" stroke="#E0E0E0" stroke-width="1" stroke-dasharray="4,4"/>
     </svg>`,
     options: [
-      { id: 'a', label: 'Circle' },
-      { id: 'b', label: 'Parallelogram (4 sides)' },
-      { id: 'c', label: 'Triangle' },
-      { id: 'd', label: 'Pentagon (5 sides)' },
+      { id: 'a', label: 'Circle', visual: oCircle(14, '#9C27B0') },
+      { id: 'b', label: 'Parallelogram (4 sides)', visual: opt('<polygon points="18,35 28,15 52,15 42,35" fill="#FF9800" stroke="#333" stroke-width="1.5"/>') },
+      { id: 'c', label: 'Triangle', visual: oTriangle(28, '#2196F3') },
+      { id: 'd', label: 'Pentagon (5 sides)', visual: oPentagon(16, '#4CAF50') },
     ],
     correctAnswerId: 'b',
     explanation: 'All three shapes have exactly 4 sides (square, rectangle, diamond). A parallelogram also has 4 sides!',
@@ -152,10 +193,10 @@ export const figureClassification: Question[] = [
       <line x1="20" y1="138" x2="380" y2="138" stroke="#E0E0E0" stroke-width="1" stroke-dasharray="4,4"/>
     </svg>`,
     options: [
-      { id: 'a', label: 'Diamond with stripes' },
-      { id: 'b', label: 'Plain circle (no stripes)' },
-      { id: 'c', label: 'Dotted square' },
-      { id: 'd', label: 'Plain triangle' },
+      { id: 'a', label: 'Diamond with stripes', visual: oDiamond(26, '#E1BEE7', '<line x1="28" y1="20" x2="42" y2="20" stroke="#333" stroke-width="1.5"/><line x1="25" y1="25" x2="45" y2="25" stroke="#333" stroke-width="1.5"/><line x1="28" y1="30" x2="42" y2="30" stroke="#333" stroke-width="1.5"/>') },
+      { id: 'b', label: 'Plain circle (no stripes)', visual: oCircle(14, '#BBDEFB') },
+      { id: 'c', label: 'Dotted square', visual: oSquare(22, '#FFCCBC', '<circle cx="30" cy="20" r="2" fill="#333"/><circle cx="40" cy="20" r="2" fill="#333"/><circle cx="30" cy="30" r="2" fill="#333"/><circle cx="40" cy="30" r="2" fill="#333"/>') },
+      { id: 'd', label: 'Plain triangle', visual: oTriangle(28, '#E1BEE7') },
     ],
     correctAnswerId: 'a',
     explanation: 'All three shapes have horizontal stripes inside them. The diamond with stripes also has stripes!',
@@ -180,10 +221,10 @@ export const figureClassification: Question[] = [
       <line x1="20" y1="138" x2="380" y2="138" stroke="#E0E0E0" stroke-width="1" stroke-dasharray="4,4"/>
     </svg>`,
     options: [
-      { id: 'a', label: 'Orange triangle' },
-      { id: 'b', label: 'Red circle' },
-      { id: 'c', label: 'Blue square' },
-      { id: 'd', label: 'Purple rectangle' },
+      { id: 'a', label: 'Orange triangle', visual: oTriangle(28, '#FF9800') },
+      { id: 'b', label: 'Red circle', visual: oCircle(14, '#F44336') },
+      { id: 'c', label: 'Blue square', visual: oSquare(22, '#2196F3') },
+      { id: 'd', label: 'Purple rectangle', visual: oRect(30, 18, '#9C27B0') },
     ],
     correctAnswerId: 'a',
     explanation: 'All three are triangles (different colors and orientations). Only the orange triangle is also a triangle.',
@@ -208,10 +249,10 @@ export const figureClassification: Question[] = [
       <line x1="20" y1="138" x2="380" y2="138" stroke="#E0E0E0" stroke-width="1" stroke-dasharray="4,4"/>
     </svg>`,
     options: [
-      { id: 'a', label: 'Small blue diamond' },
-      { id: 'b', label: 'Large blue circle' },
-      { id: 'c', label: 'Small red circle' },
-      { id: 'd', label: 'Large red square' },
+      { id: 'a', label: 'Small blue diamond', visual: oDiamond(18, '#2196F3') },
+      { id: 'b', label: 'Large blue circle', visual: oCircle(18, '#2196F3') },
+      { id: 'c', label: 'Small red circle', visual: oCircle(8, '#F44336') },
+      { id: 'd', label: 'Large red square', visual: oSquare(28, '#F44336') },
     ],
     correctAnswerId: 'a',
     explanation: 'All three are SMALL and BLUE. The small blue diamond matches both attributes!',
@@ -242,10 +283,10 @@ export const figureClassification: Question[] = [
       <line x1="20" y1="138" x2="380" y2="138" stroke="#E0E0E0" stroke-width="1" stroke-dasharray="4,4"/>
     </svg>`,
     options: [
-      { id: 'a', label: 'Diamond with 2 dots inside' },
-      { id: 'b', label: 'Circle with 1 dot inside' },
-      { id: 'c', label: 'Square with 3 dots inside' },
-      { id: 'd', label: 'Empty triangle' },
+      { id: 'a', label: 'Diamond with 2 dots inside', visual: oDiamond(26, 'white', '<circle cx="30" cy="25" r="3" fill="#F44336"/><circle cx="40" cy="25" r="3" fill="#2196F3"/>') },
+      { id: 'b', label: 'Circle with 1 dot inside', visual: oCircle(15, 'white', '<circle cx="35" cy="25" r="3" fill="#F44336"/>') },
+      { id: 'c', label: 'Square with 3 dots inside', visual: oSquare(24, 'white', '<circle cx="28" cy="22" r="3" fill="#4CAF50"/><circle cx="42" cy="22" r="3" fill="#FF9800"/><circle cx="35" cy="32" r="3" fill="#9C27B0"/>') },
+      { id: 'd', label: 'Empty triangle', visual: oTriangle(28, 'white') },
     ],
     correctAnswerId: 'a',
     explanation: 'Each shape has exactly 2 small shapes inside it. Only the diamond with 2 dots matches!',
@@ -273,10 +314,10 @@ export const figureClassification: Question[] = [
       <line x1="20" y1="138" x2="380" y2="138" stroke="#E0E0E0" stroke-width="1" stroke-dasharray="4,4"/>
     </svg>`,
     options: [
-      { id: 'a', label: 'Star with dot in center' },
-      { id: 'b', label: 'Circle with no dot' },
-      { id: 'c', label: 'Square with stripe' },
-      { id: 'd', label: 'Triangle with X inside' },
+      { id: 'a', label: 'Star with dot in center', visual: oEmoji('⭐', 26) },
+      { id: 'b', label: 'Circle with no dot', visual: oCircle(14, '#FFECB3') },
+      { id: 'c', label: 'Square with stripe', visual: oSquare(22, '#C8E6C9', '<line x1="24" y1="14" x2="46" y2="14" stroke="#333" stroke-width="2"/>') },
+      { id: 'd', label: 'Triangle with X inside', visual: oTriangle(28, '#F8BBD0', 'up', '<line x1="28" y1="22" x2="42" y2="34" stroke="#333" stroke-width="1.5"/><line x1="42" y1="22" x2="28" y2="34" stroke="#333" stroke-width="1.5"/>') },
     ],
     correctAnswerId: 'a',
     explanation: 'All shapes have a black dot in their center. The star with a dot also has this feature!',
@@ -300,10 +341,10 @@ export const figureClassification: Question[] = [
       <line x1="20" y1="138" x2="380" y2="138" stroke="#E0E0E0" stroke-width="1" stroke-dasharray="4,4"/>
     </svg>`,
     options: [
-      { id: 'a', label: 'Shape pointing up' },
-      { id: 'b', label: 'Shape pointing down' },
-      { id: 'c', label: 'Shape pointing left' },
-      { id: 'd', label: 'Round shape' },
+      { id: 'a', label: 'Shape pointing up', visual: oTriangle(28, '#FF5722') },
+      { id: 'b', label: 'Shape pointing down', visual: oTriangle(28, '#FF5722', 'down') },
+      { id: 'c', label: 'Shape pointing left', visual: opt('<polygon points="10,25 40,10 40,40" fill="#FF5722" stroke="#333" stroke-width="1.5"/>') },
+      { id: 'd', label: 'Round shape', visual: oCircle(14, '#FF5722') },
     ],
     correctAnswerId: 'a',
     explanation: 'All shapes point upward (they have a pointed top). Only the shape pointing up matches!',
@@ -331,10 +372,10 @@ export const figureClassification: Question[] = [
       <line x1="20" y1="138" x2="380" y2="138" stroke="#E0E0E0" stroke-width="1" stroke-dasharray="4,4"/>
     </svg>`,
     options: [
-      { id: 'a', label: 'Half-filled diamond' },
-      { id: 'b', label: 'Fully filled circle' },
-      { id: 'c', label: 'Empty square' },
-      { id: 'd', label: 'Quarter-filled triangle' },
+      { id: 'a', label: 'Half-filled diamond', visual: opt('<polygon points="35,10 50,25 35,40 20,25" fill="white" stroke="#333" stroke-width="1.5"/><polygon points="35,10 35,40 20,25" fill="#E91E63"/>') },
+      { id: 'b', label: 'Fully filled circle', visual: oCircle(14, '#3F51B5') },
+      { id: 'c', label: 'Empty square', visual: oSquare(22, 'white') },
+      { id: 'd', label: 'Quarter-filled triangle', visual: oTriangle(28, 'white', 'up', '<polygon points="35,34 29,34 35,26" fill="#4CAF50"/>') },
     ],
     correctAnswerId: 'a',
     explanation: 'All shapes are exactly HALF filled with color. The half-filled diamond matches this rule!',
@@ -359,10 +400,10 @@ export const figureClassification: Question[] = [
       <line x1="20" y1="138" x2="380" y2="138" stroke="#E0E0E0" stroke-width="1" stroke-dasharray="4,4"/>
     </svg>`,
     options: [
-      { id: 'a', label: 'Green triangle' },
-      { id: 'b', label: 'Red pentagon' },
-      { id: 'c', label: 'Blue rectangle' },
-      { id: 'd', label: 'Yellow hexagon' },
+      { id: 'a', label: 'Green triangle', visual: oTriangle(28, '#4CAF50') },
+      { id: 'b', label: 'Red pentagon', visual: oPentagon(14, '#F44336') },
+      { id: 'c', label: 'Blue rectangle', visual: oRect(30, 18, '#2196F3') },
+      { id: 'd', label: 'Yellow hexagon', visual: oHexagon(14, '#FFC107') },
     ],
     correctAnswerId: 'a',
     explanation: 'All shapes have 3 sides (triangles). The green triangle also has 3 sides.',
@@ -388,10 +429,10 @@ export const figureClassification: Question[] = [
       <line x1="20" y1="138" x2="380" y2="138" stroke="#E0E0E0" stroke-width="1" stroke-dasharray="4,4"/>
     </svg>`,
     options: [
-      { id: 'a', label: 'Nonagon (9 sides)' },
-      { id: 'b', label: 'Square (4 sides)' },
-      { id: 'c', label: 'Hexagon (6 sides)' },
-      { id: 'd', label: 'Octagon (8 sides)' },
+      { id: 'a', label: 'Nonagon (9 sides)', visual: opt((() => { const pts = [0,1,2,3,4,5,6,7,8].map(i => { const a = (i * 40 - 90) * Math.PI / 180; return `${35 + 16 * Math.cos(a)},${25 + 16 * Math.sin(a)}`; }).join(' '); return `<polygon points="${pts}" fill="#CE93D8" stroke="#333" stroke-width="1.5"/>`; })()) },
+      { id: 'b', label: 'Square (4 sides)', visual: oSquare(22, '#CE93D8') },
+      { id: 'c', label: 'Hexagon (6 sides)', visual: oHexagon(14, '#CE93D8') },
+      { id: 'd', label: 'Octagon (8 sides)', visual: opt((() => { const pts = [0,1,2,3,4,5,6,7].map(i => { const a = (i * 45 - 90) * Math.PI / 180; return `${35 + 16 * Math.cos(a)},${25 + 16 * Math.sin(a)}`; }).join(' '); return `<polygon points="${pts}" fill="#CE93D8" stroke="#333" stroke-width="1.5"/>`; })()) },
     ],
     correctAnswerId: 'a',
     explanation: 'Triangle=3, pentagon=5, heptagon=7. All have an ODD number of sides. Nonagon (9 sides) is also odd!',
@@ -419,10 +460,10 @@ export const figureClassification: Question[] = [
       <line x1="20" y1="138" x2="380" y2="138" stroke="#E0E0E0" stroke-width="1" stroke-dasharray="4,4"/>
     </svg>`,
     options: [
-      { id: 'a', label: 'Pentagon with triangle inside' },
-      { id: 'b', label: 'Circle with circle inside' },
-      { id: 'c', label: 'Square with square inside' },
-      { id: 'd', label: 'Triangle with triangle inside' },
+      { id: 'a', label: 'Pentagon with triangle inside', visual: oPentagon(18, '#BBDEFB', '<polygon points="35,18 28,32 42,32" fill="#FF8A65" stroke="#333" stroke-width="1"/>') },
+      { id: 'b', label: 'Circle with circle inside', visual: oCircle(16, '#BBDEFB', '<circle cx="35" cy="25" r="8" fill="#FF8A65" stroke="#333" stroke-width="1"/>') },
+      { id: 'c', label: 'Square with square inside', visual: oSquare(26, '#C8E6C9', '<rect x="29" y="19" width="12" height="12" fill="#EF9A9A" stroke="#333" stroke-width="1"/>') },
+      { id: 'd', label: 'Triangle with triangle inside', visual: oTriangle(32, '#E1BEE7', 'up', '<polygon points="35,20 30,30 40,30" fill="#FFF59D" stroke="#333" stroke-width="1"/>') },
     ],
     correctAnswerId: 'a',
     explanation: 'Each figure has a DIFFERENT shape inside than the shape outside (circle has square, square has triangle, triangle has circle). Pentagon with triangle = different shapes!',
@@ -447,10 +488,10 @@ export const figureClassification: Question[] = [
       <line x1="20" y1="138" x2="380" y2="138" stroke="#E0E0E0" stroke-width="1" stroke-dasharray="4,4"/>
     </svg>`,
     options: [
-      { id: 'a', label: 'Outlined semicircle (curved, not filled)' },
-      { id: 'b', label: 'Filled circle' },
-      { id: 'c', label: 'Outlined triangle' },
-      { id: 'd', label: 'Filled oval' },
+      { id: 'a', label: 'Outlined semicircle (curved, not filled)', visual: opt('<path d="M 20 30 A 15 15 0 0 1 50 30" fill="none" stroke="#333" stroke-width="2.5"/>') },
+      { id: 'b', label: 'Filled circle', visual: oCircle(14, '#333') },
+      { id: 'c', label: 'Outlined triangle', visual: oTriangle(28, 'none') },
+      { id: 'd', label: 'Filled oval', visual: opt('<ellipse cx="35" cy="25" rx="18" ry="13" fill="#333" stroke="#333" stroke-width="1.5"/>') },
     ],
     correctAnswerId: 'a',
     explanation: 'Two rules: (1) all are outlines (not filled) and (2) all have curved edges. Only the outlined semicircle matches BOTH rules.',
@@ -478,10 +519,10 @@ export const figureClassification: Question[] = [
       <line x1="20" y1="138" x2="380" y2="138" stroke="#E0E0E0" stroke-width="1" stroke-dasharray="4,4"/>
     </svg>`,
     options: [
-      { id: 'a', label: 'Heart (symmetric)' },
-      { id: 'b', label: 'Parallelogram (not symmetric vertically)' },
-      { id: 'c', label: 'Lightning bolt (not symmetric)' },
-      { id: 'd', label: 'Curved swoosh (not symmetric)' },
+      { id: 'a', label: 'Heart (symmetric)', visual: opt('<path d="M 35 38 C 20 28 12 18 20 12 C 28 6 35 14 35 18 C 35 14 42 6 50 12 C 58 18 50 28 35 38Z" fill="#F44336" stroke="#333" stroke-width="1.5"/>') },
+      { id: 'b', label: 'Parallelogram (not symmetric)', visual: opt('<polygon points="18,35 28,12 52,12 42,35" fill="#4FC3F7" stroke="#333" stroke-width="1.5"/>') },
+      { id: 'c', label: 'Lightning bolt (not symmetric)', visual: opt('<polygon points="38,5 25,22 33,22 28,45 45,24 36,24" fill="#FFC107" stroke="#333" stroke-width="1.5"/>') },
+      { id: 'd', label: 'Curved swoosh (not symmetric)', visual: opt('<path d="M 15 35 Q 25 10 45 20 Q 55 25 55 15" fill="none" stroke="#333" stroke-width="3" stroke-linecap="round"/>') },
     ],
     correctAnswerId: 'a',
     explanation: 'All shapes have a vertical line of symmetry (they look the same on both sides). A heart is also symmetric!',
@@ -518,10 +559,10 @@ export const figureClassification: Question[] = [
       <line x1="20" y1="138" x2="380" y2="138" stroke="#E0E0E0" stroke-width="1" stroke-dasharray="4,4"/>
     </svg>`,
     options: [
-      { id: 'a', label: 'Hexagon with 6 dots' },
-      { id: 'b', label: 'Hexagon with 4 dots' },
-      { id: 'c', label: 'Triangle with 5 dots' },
-      { id: 'd', label: 'Square with 3 dots' },
+      { id: 'a', label: 'Hexagon with 6 dots', visual: oHexagon(18, '#BCAAA4', '<circle cx="28" cy="20" r="2.5" fill="#333"/><circle cx="42" cy="20" r="2.5" fill="#333"/><circle cx="25" cy="28" r="2.5" fill="#333"/><circle cx="45" cy="28" r="2.5" fill="#333"/><circle cx="30" cy="35" r="2.5" fill="#333"/><circle cx="40" cy="35" r="2.5" fill="#333"/>') },
+      { id: 'b', label: 'Hexagon with 4 dots', visual: oHexagon(18, '#BCAAA4', '<circle cx="29" cy="20" r="2.5" fill="#333"/><circle cx="41" cy="20" r="2.5" fill="#333"/><circle cx="29" cy="30" r="2.5" fill="#333"/><circle cx="41" cy="30" r="2.5" fill="#333"/>') },
+      { id: 'c', label: 'Triangle with 5 dots', visual: oTriangle(32, '#BCAAA4', 'up', '<circle cx="35" cy="16" r="2.5" fill="#333"/><circle cx="28" cy="28" r="2.5" fill="#333"/><circle cx="42" cy="28" r="2.5" fill="#333"/><circle cx="24" cy="35" r="2.5" fill="#333"/><circle cx="46" cy="35" r="2.5" fill="#333"/>') },
+      { id: 'd', label: 'Square with 3 dots', visual: oSquare(26, '#BCAAA4', '<circle cx="28" cy="22" r="2.5" fill="#333"/><circle cx="42" cy="22" r="2.5" fill="#333"/><circle cx="35" cy="32" r="2.5" fill="#333"/>') },
     ],
     correctAnswerId: 'a',
     explanation: 'Triangle has 3 sides and 3 dots. Square has 4 sides and 4 dots. Pentagon has 5 sides and 5 dots. The number of dots equals the number of sides! Hexagon with 6 dots follows this rule.',

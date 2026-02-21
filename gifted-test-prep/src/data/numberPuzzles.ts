@@ -83,6 +83,45 @@ function makeBalanceSvg(
   return svg;
 }
 
+/** Small SVG for answer option showing emojis */
+function makeOptionSvg(emoji: string, count: number): string {
+  const W = 130, H = 44;
+  const padX = 6;
+  const contentW = W - 2 * padX;
+  const emojiWFactor = 1.35;
+  const lineHFactor = 1.3;
+
+  let fs = 22;
+  let perRow: number;
+  let rows: number;
+
+  do {
+    perRow = Math.max(1, Math.floor(contentW / (fs * emojiWFactor)));
+    rows = Math.ceil(count / perRow);
+    if (rows * fs * lineHFactor <= H - 6) break;
+    fs -= 2;
+  } while (fs >= 12);
+
+  fs = Math.max(fs, 12);
+  perRow = Math.max(1, Math.floor(contentW / (fs * emojiWFactor)));
+  rows = Math.ceil(count / perRow);
+
+  const totalH = rows * fs * lineHFactor;
+  const svgH = Math.max(H, totalH + 8);
+  const baseY = (svgH - totalH) / 2 + fs * 0.85;
+
+  let svg = `<svg viewBox="0 0 ${W} ${svgH}" xmlns="http://www.w3.org/2000/svg">`;
+  let rem = count;
+  for (let r = 0; r < rows; r++) {
+    const n = Math.min(rem, perRow);
+    const y = baseY + r * fs * lineHFactor;
+    svg += `<text x="${W / 2}" y="${y}" text-anchor="middle" font-size="${fs}">${emoji.repeat(n)}</text>`;
+    rem -= n;
+  }
+  svg += `</svg>`;
+  return svg;
+}
+
 export const numberPuzzles: Question[] = [
   // ===== EASY =====
   {
@@ -92,10 +131,10 @@ export const numberPuzzles: Question[] = [
     prompt: 'Both sides must be equal. How many are missing on the right side?',
     visual: makeBalanceSvg([3], [2, '?'], '🍎'),
     options: [
-      { id: 'a', label: '1' },
-      { id: 'b', label: '2' },
-      { id: 'c', label: '3' },
-      { id: 'd', label: '4' },
+      { id: 'a', label: '1', visual: makeOptionSvg('🍎', 1) },
+      { id: 'b', label: '2', visual: makeOptionSvg('🍎', 2) },
+      { id: 'c', label: '3', visual: makeOptionSvg('🍎', 3) },
+      { id: 'd', label: '4', visual: makeOptionSvg('🍎', 4) },
     ],
     correctAnswerId: 'a',
     explanation: 'Left side has 3. Right side has 2 + ? = 3. So ? = 1.',
@@ -108,10 +147,10 @@ export const numberPuzzles: Question[] = [
     prompt: 'Make both sides the same! How many should go in the mystery box?',
     visual: makeBalanceSvg([5], [3, '?'], '⭐'),
     options: [
-      { id: 'a', label: '1' },
-      { id: 'b', label: '2' },
-      { id: 'c', label: '3' },
-      { id: 'd', label: '4' },
+      { id: 'a', label: '1', visual: makeOptionSvg('⭐', 1) },
+      { id: 'b', label: '2', visual: makeOptionSvg('⭐', 2) },
+      { id: 'c', label: '3', visual: makeOptionSvg('⭐', 3) },
+      { id: 'd', label: '4', visual: makeOptionSvg('⭐', 4) },
     ],
     correctAnswerId: 'b',
     explanation: 'Left side has 5. Right side has 3 + ? = 5. So ? = 2.',
@@ -124,10 +163,10 @@ export const numberPuzzles: Question[] = [
     prompt: 'Balance the scale! What number goes in the box?',
     visual: makeBalanceSvg([4], [1, '?'], '🎈'),
     options: [
-      { id: 'a', label: '2' },
-      { id: 'b', label: '3' },
-      { id: 'c', label: '4' },
-      { id: 'd', label: '5' },
+      { id: 'a', label: '2', visual: makeOptionSvg('🎈', 2) },
+      { id: 'b', label: '3', visual: makeOptionSvg('🎈', 3) },
+      { id: 'c', label: '4', visual: makeOptionSvg('🎈', 4) },
+      { id: 'd', label: '5', visual: makeOptionSvg('🎈', 5) },
     ],
     correctAnswerId: 'b',
     explanation: 'Left side has 4. Right side has 1 + ? = 4. So ? = 3.',
@@ -139,10 +178,10 @@ export const numberPuzzles: Question[] = [
     prompt: 'The left and right must be equal. Find the missing number.',
     visual: makeBalanceSvg([2, 1], ['?'], '🌸'),
     options: [
-      { id: 'a', label: '2' },
-      { id: 'b', label: '3' },
-      { id: 'c', label: '4' },
-      { id: 'd', label: '1' },
+      { id: 'a', label: '2', visual: makeOptionSvg('🌸', 2) },
+      { id: 'b', label: '3', visual: makeOptionSvg('🌸', 3) },
+      { id: 'c', label: '4', visual: makeOptionSvg('🌸', 4) },
+      { id: 'd', label: '1', visual: makeOptionSvg('🌸', 1) },
     ],
     correctAnswerId: 'b',
     explanation: 'Left side: 2 + 1 = 3. Right side: ? = 3.',
@@ -155,10 +194,10 @@ export const numberPuzzles: Question[] = [
     prompt: 'What goes in the box to make both sides equal?',
     visual: makeBalanceSvg([2, 2], [3, '?'], '🐟'),
     options: [
-      { id: 'a', label: '1' },
-      { id: 'b', label: '2' },
-      { id: 'c', label: '3' },
-      { id: 'd', label: '4' },
+      { id: 'a', label: '1', visual: makeOptionSvg('🐟', 1) },
+      { id: 'b', label: '2', visual: makeOptionSvg('🐟', 2) },
+      { id: 'c', label: '3', visual: makeOptionSvg('🐟', 3) },
+      { id: 'd', label: '4', visual: makeOptionSvg('🐟', 4) },
     ],
     correctAnswerId: 'a',
     explanation: 'Left side: 2 + 2 = 4. Right side: 3 + ? = 4. So ? = 1.',
@@ -170,10 +209,10 @@ export const numberPuzzles: Question[] = [
     prompt: 'Both trains must carry the same total. How many for the mystery wagon?',
     visual: makeBalanceSvg([1, 4], [2, '?'], '🌟'),
     options: [
-      { id: 'a', label: '2' },
-      { id: 'b', label: '3' },
-      { id: 'c', label: '4' },
-      { id: 'd', label: '5' },
+      { id: 'a', label: '2', visual: makeOptionSvg('🌟', 2) },
+      { id: 'b', label: '3', visual: makeOptionSvg('🌟', 3) },
+      { id: 'c', label: '4', visual: makeOptionSvg('🌟', 4) },
+      { id: 'd', label: '5', visual: makeOptionSvg('🌟', 5) },
     ],
     correctAnswerId: 'b',
     explanation: 'Left side: 1 + 4 = 5. Right side: 2 + ? = 5. So ? = 3.',
@@ -185,10 +224,10 @@ export const numberPuzzles: Question[] = [
     prompt: 'Help! One wagon is empty. How many should go in it?',
     visual: makeBalanceSvg([3, 2], ['?'], '🐱'),
     options: [
-      { id: 'a', label: '3' },
-      { id: 'b', label: '4' },
-      { id: 'c', label: '5' },
-      { id: 'd', label: '6' },
+      { id: 'a', label: '3', visual: makeOptionSvg('🐱', 3) },
+      { id: 'b', label: '4', visual: makeOptionSvg('🐱', 4) },
+      { id: 'c', label: '5', visual: makeOptionSvg('🐱', 5) },
+      { id: 'd', label: '6', visual: makeOptionSvg('🐱', 6) },
     ],
     correctAnswerId: 'c',
     explanation: 'Left side: 3 + 2 = 5. Right side must also be 5. So ? = 5.',
@@ -201,10 +240,10 @@ export const numberPuzzles: Question[] = [
     prompt: 'Make both sides equal. What is the missing number?',
     visual: makeBalanceSvg([3, 4], [5, '?'], '🎲'),
     options: [
-      { id: 'a', label: '1' },
-      { id: 'b', label: '2' },
-      { id: 'c', label: '3' },
-      { id: 'd', label: '4' },
+      { id: 'a', label: '1', visual: makeOptionSvg('🎲', 1) },
+      { id: 'b', label: '2', visual: makeOptionSvg('🎲', 2) },
+      { id: 'c', label: '3', visual: makeOptionSvg('🎲', 3) },
+      { id: 'd', label: '4', visual: makeOptionSvg('🎲', 4) },
     ],
     correctAnswerId: 'b',
     explanation: 'Left side: 3 + 4 = 7. Right side: 5 + ? = 7. So ? = 2.',
@@ -217,10 +256,10 @@ export const numberPuzzles: Question[] = [
     prompt: 'Balance the equation by finding the missing number.',
     visual: makeBalanceSvg([2, 3, 1], [4, '?'], '🔶'),
     options: [
-      { id: 'a', label: '1' },
-      { id: 'b', label: '2' },
-      { id: 'c', label: '3' },
-      { id: 'd', label: '4' },
+      { id: 'a', label: '1', visual: makeOptionSvg('🔶', 1) },
+      { id: 'b', label: '2', visual: makeOptionSvg('🔶', 2) },
+      { id: 'c', label: '3', visual: makeOptionSvg('🔶', 3) },
+      { id: 'd', label: '4', visual: makeOptionSvg('🔶', 4) },
     ],
     correctAnswerId: 'b',
     explanation: 'Left side: 2 + 3 + 1 = 6. Right side: 4 + ? = 6. So ? = 2.',
@@ -232,10 +271,10 @@ export const numberPuzzles: Question[] = [
     prompt: 'Both sides must add up to the same total. What is the missing piece?',
     visual: makeBalanceSvg([5, 3], [2, 4, '?'], '🌻'),
     options: [
-      { id: 'a', label: '1' },
-      { id: 'b', label: '2' },
-      { id: 'c', label: '3' },
-      { id: 'd', label: '4' },
+      { id: 'a', label: '1', visual: makeOptionSvg('🌻', 1) },
+      { id: 'b', label: '2', visual: makeOptionSvg('🌻', 2) },
+      { id: 'c', label: '3', visual: makeOptionSvg('🌻', 3) },
+      { id: 'd', label: '4', visual: makeOptionSvg('🌻', 4) },
     ],
     correctAnswerId: 'b',
     explanation: 'Left side: 5 + 3 = 8. Right side: 2 + 4 + ? = 8. So ? = 2.',
@@ -247,10 +286,10 @@ export const numberPuzzles: Question[] = [
     prompt: 'What number completes this puzzle?',
     visual: makeBalanceSvg([4, 2, 3], [1, '?'], '🎪'),
     options: [
-      { id: 'a', label: '6' },
-      { id: 'b', label: '7' },
-      { id: 'c', label: '8' },
-      { id: 'd', label: '9' },
+      { id: 'a', label: '6', visual: makeOptionSvg('🎪', 6) },
+      { id: 'b', label: '7', visual: makeOptionSvg('🎪', 7) },
+      { id: 'c', label: '8', visual: makeOptionSvg('🎪', 8) },
+      { id: 'd', label: '9', visual: makeOptionSvg('🎪', 9) },
     ],
     correctAnswerId: 'c',
     explanation: 'Left side: 4 + 2 + 3 = 9. Right side: 1 + ? = 9. So ? = 8.',
@@ -262,10 +301,10 @@ export const numberPuzzles: Question[] = [
     prompt: 'Help balance the trains! What goes in the mystery wagon?',
     visual: makeBalanceSvg([3, 3, 2], [4, '?'], '🦋'),
     options: [
-      { id: 'a', label: '3' },
-      { id: 'b', label: '4' },
-      { id: 'c', label: '5' },
-      { id: 'd', label: '6' },
+      { id: 'a', label: '3', visual: makeOptionSvg('🦋', 3) },
+      { id: 'b', label: '4', visual: makeOptionSvg('🦋', 4) },
+      { id: 'c', label: '5', visual: makeOptionSvg('🦋', 5) },
+      { id: 'd', label: '6', visual: makeOptionSvg('🦋', 6) },
     ],
     correctAnswerId: 'b',
     explanation: 'Left side: 3 + 3 + 2 = 8. Right side: 4 + ? = 8. So ? = 4.',
@@ -277,10 +316,10 @@ export const numberPuzzles: Question[] = [
     prompt: 'The scale must balance. Find the answer.',
     visual: makeBalanceSvg([2, 5], [3, 1, '?'], '🎯'),
     options: [
-      { id: 'a', label: '2' },
-      { id: 'b', label: '3' },
-      { id: 'c', label: '4' },
-      { id: 'd', label: '5' },
+      { id: 'a', label: '2', visual: makeOptionSvg('🎯', 2) },
+      { id: 'b', label: '3', visual: makeOptionSvg('🎯', 3) },
+      { id: 'c', label: '4', visual: makeOptionSvg('🎯', 4) },
+      { id: 'd', label: '5', visual: makeOptionSvg('🎯', 5) },
     ],
     correctAnswerId: 'b',
     explanation: 'Left side: 2 + 5 = 7. Right side: 3 + 1 + ? = 7. So ? = 3.',
@@ -293,10 +332,10 @@ export const numberPuzzles: Question[] = [
     prompt: 'This is a big puzzle! Find the missing number to balance both sides.',
     visual: makeBalanceSvg([4, 3, 2], [3, '?', 1], '🎵'),
     options: [
-      { id: 'a', label: '4' },
-      { id: 'b', label: '5' },
-      { id: 'c', label: '6' },
-      { id: 'd', label: '3' },
+      { id: 'a', label: '4', visual: makeOptionSvg('🎵', 4) },
+      { id: 'b', label: '5', visual: makeOptionSvg('🎵', 5) },
+      { id: 'c', label: '6', visual: makeOptionSvg('🎵', 6) },
+      { id: 'd', label: '3', visual: makeOptionSvg('🎵', 3) },
     ],
     correctAnswerId: 'b',
     explanation: 'Left side: 4 + 3 + 2 = 9. Right side: 3 + ? + 1 = 9. So 4 + ? = 9, and ? = 5.',
@@ -309,10 +348,10 @@ export const numberPuzzles: Question[] = [
     prompt: 'Solve this tricky balance puzzle!',
     visual: makeBalanceSvg([5, 2, 3], [1, '?', 2], '🐝'),
     options: [
-      { id: 'a', label: '5' },
-      { id: 'b', label: '6' },
-      { id: 'c', label: '7' },
-      { id: 'd', label: '8' },
+      { id: 'a', label: '5', visual: makeOptionSvg('🐝', 5) },
+      { id: 'b', label: '6', visual: makeOptionSvg('🐝', 6) },
+      { id: 'c', label: '7', visual: makeOptionSvg('🐝', 7) },
+      { id: 'd', label: '8', visual: makeOptionSvg('🐝', 8) },
     ],
     correctAnswerId: 'c',
     explanation: 'Left side: 5 + 2 + 3 = 10. Right side: 1 + ? + 2 = 10. So 3 + ? = 10, and ? = 7.',
@@ -324,10 +363,10 @@ export const numberPuzzles: Question[] = [
     prompt: 'Can you crack this puzzle? Both sides must be equal.',
     visual: makeBalanceSvg([3, 4, 3], [2, 2, '?'], '🌈'),
     options: [
-      { id: 'a', label: '4' },
-      { id: 'b', label: '5' },
-      { id: 'c', label: '6' },
-      { id: 'd', label: '7' },
+      { id: 'a', label: '4', visual: makeOptionSvg('🌈', 4) },
+      { id: 'b', label: '5', visual: makeOptionSvg('🌈', 5) },
+      { id: 'c', label: '6', visual: makeOptionSvg('🌈', 6) },
+      { id: 'd', label: '7', visual: makeOptionSvg('🌈', 7) },
     ],
     correctAnswerId: 'c',
     explanation: 'Left side: 3 + 4 + 3 = 10. Right side: 2 + 2 + ? = 10. So 4 + ? = 10, and ? = 6.',
@@ -339,10 +378,10 @@ export const numberPuzzles: Question[] = [
     prompt: 'Make these trains carry the same amount!',
     visual: makeBalanceSvg([5, 4], [2, '?', 3], '🎁'),
     options: [
-      { id: 'a', label: '3' },
-      { id: 'b', label: '4' },
-      { id: 'c', label: '5' },
-      { id: 'd', label: '6' },
+      { id: 'a', label: '3', visual: makeOptionSvg('🎁', 3) },
+      { id: 'b', label: '4', visual: makeOptionSvg('🎁', 4) },
+      { id: 'c', label: '5', visual: makeOptionSvg('🎁', 5) },
+      { id: 'd', label: '6', visual: makeOptionSvg('🎁', 6) },
     ],
     correctAnswerId: 'b',
     explanation: 'Left side: 5 + 4 = 9. Right side: 2 + ? + 3 = 9. So 5 + ? = 9, and ? = 4.',
@@ -354,10 +393,10 @@ export const numberPuzzles: Question[] = [
     prompt: 'This puzzle has lots of wagons! Find the missing number.',
     visual: makeBalanceSvg([2, 3, 4, 1], [5, '?'], '🔵'),
     options: [
-      { id: 'a', label: '4' },
-      { id: 'b', label: '5' },
-      { id: 'c', label: '6' },
-      { id: 'd', label: '7' },
+      { id: 'a', label: '4', visual: makeOptionSvg('🔵', 4) },
+      { id: 'b', label: '5', visual: makeOptionSvg('🔵', 5) },
+      { id: 'c', label: '6', visual: makeOptionSvg('🔵', 6) },
+      { id: 'd', label: '7', visual: makeOptionSvg('🔵', 7) },
     ],
     correctAnswerId: 'b',
     explanation: 'Left side: 2 + 3 + 4 + 1 = 10. Right side: 5 + ? = 10. So ? = 5.',
@@ -369,10 +408,10 @@ export const numberPuzzles: Question[] = [
     prompt: 'A real brain teaser! What makes both sides equal?',
     visual: makeBalanceSvg([3, 2, 5], ['?', 1, 3], '🐢'),
     options: [
-      { id: 'a', label: '4' },
-      { id: 'b', label: '5' },
-      { id: 'c', label: '6' },
-      { id: 'd', label: '7' },
+      { id: 'a', label: '4', visual: makeOptionSvg('🐢', 4) },
+      { id: 'b', label: '5', visual: makeOptionSvg('🐢', 5) },
+      { id: 'c', label: '6', visual: makeOptionSvg('🐢', 6) },
+      { id: 'd', label: '7', visual: makeOptionSvg('🐢', 7) },
     ],
     correctAnswerId: 'c',
     explanation: 'Left side: 3 + 2 + 5 = 10. Right side: ? + 1 + 3 = 10. So ? + 4 = 10, and ? = 6.',

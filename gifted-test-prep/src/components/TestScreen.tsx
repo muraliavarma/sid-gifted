@@ -200,17 +200,22 @@ export function TestScreen({ questions, onComplete, onQuit }: TestScreenProps) {
               key={option.id}
               onClick={() => handleSelectOption(option.id)}
               style={{
-                padding: '16px',
+                padding: option.visual ? '10px 12px 10px' : '16px',
                 border: `3px solid ${borderColor}`,
                 borderRadius: 12,
                 background: bgColor,
                 cursor: showResult ? 'default' : 'pointer',
                 textAlign: 'center',
                 transition: 'all 0.2s',
-                fontSize: 17,
+                fontSize: option.visual ? 14 : 17,
                 fontWeight: 600,
                 color: textColor,
                 position: 'relative',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: option.visual ? 2 : 0,
               }}
             >
               <span style={{
@@ -223,13 +228,21 @@ export function TestScreen({ questions, onComplete, onQuit }: TestScreenProps) {
               }}>
                 {option.id.toUpperCase()}
               </span>
-              {option.label}
-              {showResult && isCorrectOption && (
-                <span style={{ marginLeft: 8 }}>✓</span>
+              {option.visual && (
+                <div
+                  style={{ width: '100%', maxWidth: 140 }}
+                  dangerouslySetInnerHTML={{ __html: option.visual }}
+                />
               )}
-              {showResult && isSelected && !isCorrectOption && (
-                <span style={{ marginLeft: 8 }}>✗</span>
-              )}
+              <span>
+                {option.label}
+                {showResult && isCorrectOption && (
+                  <span style={{ marginLeft: 8 }}>✓</span>
+                )}
+                {showResult && isSelected && !isCorrectOption && (
+                  <span style={{ marginLeft: 8 }}>✗</span>
+                )}
+              </span>
             </button>
           );
         })}
