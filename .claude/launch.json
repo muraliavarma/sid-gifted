@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "gifted-test-prep",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd gifted-test-prep && npx vite --host"],
+      "port": 5173
+    }
+  ]
+}
