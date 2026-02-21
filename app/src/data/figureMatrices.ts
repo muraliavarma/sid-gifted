@@ -27,9 +27,6 @@ function oTriangle(s: number, fill: string, dir: 'up' | 'down' = 'up', extra = '
   }
   return opt(`<polygon points="35,${25 + s * 0.45} ${35 - s / 2},${25 - s * 0.35} ${35 + s / 2},${25 - s * 0.35}" fill="${fill}" stroke="#333" stroke-width="1.5"/>${extra}`);
 }
-function oDiamond(s: number, fill: string, extra = ''): string {
-  return opt(`<polygon points="35,${25 - s / 2} ${35 + s / 2},25 35,${25 + s / 2} ${35 - s / 2},25" fill="${fill}" stroke="#333" stroke-width="1.5"/>${extra}`);
-}
 function oArrow(dir: 'up' | 'down' | 'left' | 'right', color: string): string {
   const m: Record<string, string> = {
     up: `<polygon points="35,8 20,30 50,30" fill="${color}" stroke="#333" stroke-width="1.5"/>`,
