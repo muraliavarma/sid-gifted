@@ -7,7 +7,7 @@ import type { Question } from '../types';
  * (colored sections, dots, shapes) and fold indicators (dashed lines + arrows).
  * The child picks the option that shows what the paper looks like after folding.
  *
- * Kindergarten level: No hole punching, only folding.
+ * Kindergarten level: Simple folds, and fold-cut-unfold (what does the paper look like when unfolded after cutting?).
  */
 
 // ---- Helper functions ----
@@ -37,6 +37,24 @@ function qSvg3(panel1: string, panel2: string): string {
     `<line x1="255" y1="80" x2="269" y2="80" stroke="#999" stroke-width="1.5"/>` +
     `<polygon points="267,75 275,80 267,85" fill="#999"/>` +
     `<text x="340" y="16" text-anchor="middle" font-size="11" fill="#888">Fold 2 = ?</text>` +
+    `<rect x="290" y="32" width="100" height="100" rx="12" fill="#F0F0F0" stroke="#CCC" stroke-width="2" stroke-dasharray="8,5"/>` +
+    `<text x="340" y="96" text-anchor="middle" font-size="42" fill="#BBB" font-weight="bold">?</text>` +
+    `</svg>`;
+}
+
+/** Fold-Cut-Unfold: panel1 shows paper with fold indicators, panel2 shows folded paper with cut, "?" for unfolded result */
+function qSvgCut(foldPanel: string, cutPanel: string): string {
+  return `<svg viewBox="0 0 400 180" xmlns="http://www.w3.org/2000/svg">` +
+    `<rect x="0" y="0" width="400" height="180" rx="16" fill="#FAFAFA"/>` +
+    `<text x="60" y="16" text-anchor="middle" font-size="11" fill="#888">Fold</text>` +
+    `<g transform="translate(5,22) scale(0.7)">${foldPanel}</g>` +
+    `<line x1="118" y1="80" x2="132" y2="80" stroke="#999" stroke-width="1.5"/>` +
+    `<polygon points="130,75 138,80 130,85" fill="#999"/>` +
+    `<text x="195" y="16" text-anchor="middle" font-size="11" fill="#888">Cut ✂</text>` +
+    `<g transform="translate(140,22) scale(0.7)">${cutPanel}</g>` +
+    `<line x1="255" y1="80" x2="269" y2="80" stroke="#999" stroke-width="1.5"/>` +
+    `<polygon points="267,75 275,80 267,85" fill="#999"/>` +
+    `<text x="340" y="16" text-anchor="middle" font-size="11" fill="#888">Unfold = ?</text>` +
     `<rect x="290" y="32" width="100" height="100" rx="12" fill="#F0F0F0" stroke="#CCC" stroke-width="2" stroke-dasharray="8,5"/>` +
     `<text x="340" y="96" text-anchor="middle" font-size="42" fill="#BBB" font-weight="bold">?</text>` +
     `</svg>`;
@@ -108,28 +126,33 @@ export const paperFolding: Question[] = [
     hint: 'Which color is on the outside when you fold the white side onto the blue side?',
   },
 
-  // pf-e-002: Square with red dot in top-left. Horizontal fold (top down).
-  // Result: wide rectangle, dot hidden (folded inside).
+  // pf-e-002: Fold-cut-unfold. Vertical fold (right onto left). Semicircle cut at fold edge.
+  // Result: full circle hole at center of paper.
   {
     id: 'pf-e-002',
     category: 'paper-folding',
     difficulty: 'easy',
-    prompt: 'The paper folds along the dashed line. What does it look like after folding?',
-    visual: qSvg(
+    prompt: 'The paper is folded, then a shape is cut at the fold. What does the paper look like when you open it back up?',
+    visual: qSvgCut(
+      // Fold panel: square with vertical fold line, right folds onto left
       paper(10, 10, 140) +
-      `<circle cx="45" cy="45" r="12" fill="#E53935"/>` +
-      foldLine(10, 80, 150, 80) +
-      foldArrow(80, 30, 80, 120)
+      foldLine(80, 10, 80, 150) +
+      foldArrow(130, 120, 40, 120),
+      // Cut panel: folded rectangle with semicircle cut from fold edge
+      `<path d="M10,10 L80,10 L80,55 A25,25 0 0,0 80,105 L80,150 L10,150 Z" fill="#FFF" stroke="#999" stroke-width="2"/>` +
+      `<rect x="80" y="10" width="70" height="140" fill="none" stroke="#CCC" stroke-width="1" stroke-dasharray="5,3"/>` +
+      `<path d="M80,55 A25,25 0 0,0 80,105" fill="none" stroke="#E53935" stroke-width="2.5" stroke-dasharray="5,3"/>` +
+      `<text x="42" y="86" font-size="20">✂</text>`
     ),
     options: [
-      { id: 'a', label: 'Wide rectangle with red dot', visual: opt(`<rect x="10" y="20" width="70" height="35" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><circle cx="30" cy="37" r="7" fill="#E53935"/>`) },
-      { id: 'b', label: 'Wide rectangle no dot', visual: opt(`<rect x="10" y="20" width="70" height="35" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/>`) },
-      { id: 'c', label: 'Triangle with red dot', visual: opt(`<polygon points="45,15 10,55 80,55" fill="#FFF" stroke="#999" stroke-width="2"/><circle cx="35" cy="45" r="7" fill="#E53935"/>`) },
-      { id: 'd', label: 'Square with dot moved', visual: opt(`<rect x="15" y="5" width="60" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><circle cx="55" cy="50" r="7" fill="#E53935"/>`) },
+      { id: 'a', label: 'Circle hole at center', visual: opt(`<rect x="5" y="5" width="80" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><circle cx="45" cy="35" r="10" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/>`) },
+      { id: 'b', label: 'Semicircle on one edge', visual: opt(`<path d="M5,5 L85,5 L85,65 L5,65 L5,45 A10,10 0 0,1 5,25 Z" fill="#FFF" stroke="#999" stroke-width="2"/>`) },
+      { id: 'c', label: 'Two semicircles on edges', visual: opt(`<path d="M5,5 L85,5 L85,25 A10,10 0 0,0 85,45 L85,65 L5,65 L5,45 A10,10 0 0,0 5,25 Z" fill="#FFF" stroke="#999" stroke-width="2"/>`) },
+      { id: 'd', label: 'No hole', visual: opt(`<rect x="5" y="5" width="80" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/>`) },
     ],
-    correctAnswerId: 'b',
-    explanation: 'The top half folds down onto the bottom half. The dot was on top, so it gets folded inside and hidden. You see a plain white rectangle.',
-    hint: 'When the top folds down, does the dot end up on the outside or the inside?',
+    correctAnswerId: 'a',
+    explanation: 'Cutting a semicircle at the fold cuts through both layers. When you unfold, the two semicircles join to make a full circle in the center!',
+    hint: 'The fold is in the middle. When you cut at the fold, what happens on both sides?',
   },
 
   // pf-e-003: Square with green right half. Vertical fold (right onto left).
@@ -157,28 +180,33 @@ export const paperFolding: Question[] = [
     hint: 'The green side is folding on top. What color will you see?',
   },
 
-  // pf-e-004: Square with yellow star in center. Horizontal fold (bottom up).
-  // Result: wide rectangle, star visible on top part.
+  // pf-e-004: Fold-cut-unfold. Horizontal fold (top onto bottom). Circle cut through both layers.
+  // Result: two circle holes, one in top half and one in bottom half.
   {
     id: 'pf-e-004',
     category: 'paper-folding',
     difficulty: 'easy',
-    prompt: 'The bottom folds up. What does the paper look like?',
-    visual: qSvg(
+    prompt: 'The paper is folded in half, then a circle is cut through both layers. What does the paper look like when you open it?',
+    visual: qSvgCut(
+      // Fold panel: square with horizontal fold line, top folds onto bottom
       paper(10, 10, 140) +
-      `<text x="80" y="85" text-anchor="middle" font-size="36">⭐</text>` +
       foldLine(10, 80, 150, 80) +
-      foldArrow(20, 130, 20, 40)
+      foldArrow(80, 30, 80, 120),
+      // Cut panel: folded rectangle (bottom half) with circle cut
+      `<rect x="10" y="80" width="140" height="70" fill="#FFF" stroke="#999" stroke-width="2"/>` +
+      `<rect x="10" y="10" width="140" height="70" fill="none" stroke="#CCC" stroke-width="1" stroke-dasharray="5,3"/>` +
+      `<circle cx="80" cy="120" r="15" fill="#FAFAFA" stroke="#E53935" stroke-width="2.5" stroke-dasharray="5,3"/>` +
+      `<text x="98" y="114" font-size="18">✂</text>`
     ),
     options: [
-      { id: 'a', label: 'Wide rectangle with star', visual: opt(`<rect x="10" y="20" width="70" height="35" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><text x="45" y="44" text-anchor="middle" font-size="18">⭐</text>`) },
-      { id: 'b', label: 'Wide rectangle no star', visual: opt(`<rect x="10" y="20" width="70" height="35" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/>`) },
-      { id: 'c', label: 'Triangle with star', visual: opt(`<polygon points="45,10 10,55 80,55" fill="#FFF" stroke="#999" stroke-width="2"/><text x="45" y="47" text-anchor="middle" font-size="16">⭐</text>`) },
-      { id: 'd', label: 'Tall rectangle with star', visual: opt(`<rect x="25" y="5" width="35" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><text x="42" y="42" text-anchor="middle" font-size="16">⭐</text>`) },
+      { id: 'a', label: 'Two circle holes', visual: opt(`<rect x="5" y="5" width="80" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><circle cx="45" cy="20" r="7" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/><circle cx="45" cy="50" r="7" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/>`) },
+      { id: 'b', label: 'One circle at center', visual: opt(`<rect x="5" y="5" width="80" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><circle cx="45" cy="35" r="9" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/>`) },
+      { id: 'c', label: 'One circle at bottom', visual: opt(`<rect x="5" y="5" width="80" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><circle cx="45" cy="50" r="7" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/>`) },
+      { id: 'd', label: 'No hole', visual: opt(`<rect x="5" y="5" width="80" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/>`) },
     ],
     correctAnswerId: 'a',
-    explanation: 'When the bottom folds up, the star in the center ends up on the front of the wide rectangle. You can still see the star!',
-    hint: 'The star is in the middle of the paper. When the bottom folds up, does the star get hidden or stay visible?',
+    explanation: 'The paper was folded double, so the cut goes through both layers. When you unfold, there are two circle holes — one in the top half and one in the bottom half!',
+    hint: 'How many layers of paper did the scissors cut through? Each layer gets a hole.',
   },
 
   // pf-e-005: Square with orange triangle in top-right corner. Diagonal fold (top-right to bottom-left).
