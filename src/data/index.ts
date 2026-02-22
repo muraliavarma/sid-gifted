@@ -4,6 +4,10 @@ import { numberSeries } from './numberSeries';
 import { numberPuzzles } from './numberPuzzles';
 import { figureMatrices } from './figureMatrices';
 import { figureClassification } from './figureClassification';
+import { pictureAnalogies } from './pictureAnalogies';
+import { pictureClassification } from './pictureClassification';
+import { sentenceCompletion } from './sentenceCompletion';
+import { paperFolding } from './paperFolding';
 
 /** All questions combined */
 export const allQuestions: Question[] = [
@@ -12,6 +16,10 @@ export const allQuestions: Question[] = [
   ...numberPuzzles,
   ...figureMatrices,
   ...figureClassification,
+  ...pictureAnalogies,
+  ...pictureClassification,
+  ...sentenceCompletion,
+  ...paperFolding,
 ];
 
 // ---- Solved question tracking via localStorage ----
@@ -121,6 +129,10 @@ export function getQuestionCounts(excludeSolvedIds?: Set<string>): Record<
     'figure-classification',
     'number-series',
     'number-puzzles',
+    'picture-analogies',
+    'picture-classification',
+    'sentence-completion',
+    'paper-folding',
     'all',
   ];
   const difficulties: (Difficulty | 'all')[] = ['easy', 'medium', 'hard', 'all'];

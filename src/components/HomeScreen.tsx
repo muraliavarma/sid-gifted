@@ -8,13 +8,20 @@ interface HomeScreenProps {
   onViewHistory: () => void;
 }
 
-const categories: (Category | 'mixed')[] = [
-  'mixed',
-  'number-analogies',
-  'number-series',
-  'number-puzzles',
-  'figure-matrices',
-  'figure-classification',
+const batteries: { label: string; categories: (Category | 'mixed')[] }[] = [
+  { label: '', categories: ['mixed'] },
+  {
+    label: 'Verbal Battery',
+    categories: ['picture-analogies', 'picture-classification', 'sentence-completion'],
+  },
+  {
+    label: 'Quantitative Battery',
+    categories: ['number-analogies', 'number-series', 'number-puzzles'],
+  },
+  {
+    label: 'Nonverbal Battery',
+    categories: ['figure-matrices', 'figure-classification', 'paper-folding'],
+  },
 ];
 
 const difficulties: (Difficulty | 'mixed')[] = ['mixed', 'easy', 'medium', 'hard'];
@@ -80,44 +87,53 @@ export function HomeScreen({ onStartTest, onViewHistory }: HomeScreenProps) {
       {/* Category Selection */}
       <section style={{ marginBottom: 32 }}>
         <h2 style={{ fontSize: 20, color: '#333', marginBottom: 16 }}>Choose a Category</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 12 }}>
-          {categories.map((cat) => {
-            const isSelected = selectedCategory === cat;
-            const icon = cat === 'mixed' ? '🎯' : CATEGORY_ICONS[cat];
-            const label = cat === 'mixed' ? 'Mixed (All Categories)' : CATEGORY_LABELS[cat];
-            const desc = cat === 'mixed' ? 'Questions from all categories' : CATEGORY_DESCRIPTIONS[cat];
-            const count = cat === 'mixed'
-              ? counts['all'][selectedDifficulty === 'mixed' ? 'all' : selectedDifficulty]
-              : counts[cat][selectedDifficulty === 'mixed' ? 'all' : selectedDifficulty];
-            const total = cat === 'mixed'
-              ? totalCounts['all'][selectedDifficulty === 'mixed' ? 'all' : selectedDifficulty]
-              : totalCounts[cat][selectedDifficulty === 'mixed' ? 'all' : selectedDifficulty];
+        {batteries.map((battery) => (
+          <div key={battery.label || 'mixed'} style={{ marginBottom: 16 }}>
+            {battery.label && (
+              <h3 style={{ fontSize: 14, color: '#888', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8, marginTop: 0 }}>
+                {battery.label}
+              </h3>
+            )}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 12 }}>
+              {battery.categories.map((cat) => {
+                const isSelected = selectedCategory === cat;
+                const icon = cat === 'mixed' ? '🎯' : CATEGORY_ICONS[cat];
+                const label = cat === 'mixed' ? 'Mixed (All Categories)' : CATEGORY_LABELS[cat];
+                const desc = cat === 'mixed' ? 'Questions from all categories' : CATEGORY_DESCRIPTIONS[cat];
+                const count = cat === 'mixed'
+                  ? counts['all'][selectedDifficulty === 'mixed' ? 'all' : selectedDifficulty]
+                  : counts[cat][selectedDifficulty === 'mixed' ? 'all' : selectedDifficulty];
+                const total = cat === 'mixed'
+                  ? totalCounts['all'][selectedDifficulty === 'mixed' ? 'all' : selectedDifficulty]
+                  : totalCounts[cat][selectedDifficulty === 'mixed' ? 'all' : selectedDifficulty];
 
-            return (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                style={{
-                  padding: '16px',
-                  border: isSelected ? '3px solid #1976D2' : '2px solid #e0e0e0',
-                  borderRadius: 12,
-                  background: isSelected ? '#E3F2FD' : 'white',
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                  transition: 'all 0.2s',
-                  boxShadow: isSelected ? '0 2px 8px rgba(25,118,210,0.2)' : '0 1px 3px rgba(0,0,0,0.1)',
-                }}
-              >
-                <div style={{ fontSize: 28, marginBottom: 6 }}>{icon}</div>
-                <div style={{ fontWeight: 600, fontSize: 14, color: '#333' }}>{label}</div>
-                <div style={{ fontSize: 12, color: '#888', marginTop: 4 }}>{desc}</div>
-                <div style={{ fontSize: 12, color: '#1976D2', marginTop: 6, fontWeight: 600 }}>
-                  {count} available{!includeSolved && count !== total ? ` / ${total} total` : ''}
-                </div>
-              </button>
-            );
-          })}
-        </div>
+                return (
+                  <button
+                    key={cat}
+                    onClick={() => setSelectedCategory(cat)}
+                    style={{
+                      padding: '16px',
+                      border: isSelected ? '3px solid #1976D2' : '2px solid #e0e0e0',
+                      borderRadius: 12,
+                      background: isSelected ? '#E3F2FD' : 'white',
+                      cursor: 'pointer',
+                      textAlign: 'left',
+                      transition: 'all 0.2s',
+                      boxShadow: isSelected ? '0 2px 8px rgba(25,118,210,0.2)' : '0 1px 3px rgba(0,0,0,0.1)',
+                    }}
+                  >
+                    <div style={{ fontSize: 28, marginBottom: 6 }}>{icon}</div>
+                    <div style={{ fontWeight: 600, fontSize: 14, color: '#333' }}>{label}</div>
+                    <div style={{ fontSize: 12, color: '#888', marginTop: 4 }}>{desc}</div>
+                    <div style={{ fontSize: 12, color: '#1976D2', marginTop: 6, fontWeight: 600 }}>
+                      {count} available{!includeSolved && count !== total ? ` / ${total} total` : ''}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </section>
 
       {/* Difficulty Selection */}

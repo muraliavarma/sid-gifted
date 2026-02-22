@@ -3,7 +3,11 @@ export type Category =
   | 'figure-matrices'
   | 'figure-classification'
   | 'number-series'
-  | 'number-puzzles';
+  | 'number-puzzles'
+  | 'picture-analogies'
+  | 'picture-classification'
+  | 'sentence-completion'
+  | 'paper-folding';
 
 export type Difficulty = 'easy' | 'medium' | 'hard';
 
@@ -60,6 +64,10 @@ export const CATEGORY_LABELS: Record<Category, string> = {
   'figure-classification': 'Figure Classification',
   'number-series': 'Number Series',
   'number-puzzles': 'Number Puzzles',
+  'picture-analogies': 'Picture Analogies',
+  'picture-classification': 'Picture Classification',
+  'sentence-completion': 'Sentence Completion',
+  'paper-folding': 'Paper Folding',
 };
 
 export const CATEGORY_DESCRIPTIONS: Record<Category, string> = {
@@ -68,6 +76,10 @@ export const CATEGORY_DESCRIPTIONS: Record<Category, string> = {
   'figure-classification': 'Find which shape belongs with the group (like CogAT Nonverbal)',
   'number-series': 'Find the next number in the sequence (like CogAT Quantitative)',
   'number-puzzles': 'Balance both sides by finding the missing number (like CogAT Quantitative)',
+  'picture-analogies': 'Find how two pictures relate and apply the same rule (like CogAT Verbal)',
+  'picture-classification': 'Find which picture belongs with the group (like CogAT Verbal)',
+  'sentence-completion': 'Pick the picture that completes the sentence (like CogAT Verbal)',
+  'paper-folding': 'Figure out what the paper looks like after folding (like CogAT Nonverbal)',
 };
 
 export const CATEGORY_ICONS: Record<Category, string> = {
@@ -76,6 +88,10 @@ export const CATEGORY_ICONS: Record<Category, string> = {
   'figure-classification': '🔷',
   'number-series': '📊',
   'number-puzzles': '🧩',
+  'picture-analogies': '🖼️',
+  'picture-classification': '🏷️',
+  'sentence-completion': '💬',
+  'paper-folding': '📄',
 };
 
 export const DIFFICULTY_LABELS: Record<Difficulty, string> = {
