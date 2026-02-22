@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import type { Category, Difficulty } from './types';
 import type { Question } from './types';
-import { getQuestions } from './data';
+import { getQuestions, getSolvedQuestionIds } from './data';
 import { HomeScreen } from './components/HomeScreen';
 import { TestScreen } from './components/TestScreen';
 import { ResultScreen } from './components/ResultScreen';
@@ -16,8 +16,9 @@ function App() {
   const [testStartTime, setTestStartTime] = useState(0);
 
   const handleStartTest = useCallback(
-    (category: Category | 'mixed', difficulty: Difficulty | 'mixed', count: number) => {
-      const questions = getQuestions({ category, difficulty, count, shuffle: true });
+    (category: Category | 'mixed', difficulty: Difficulty | 'mixed', count: number, includeSolved: boolean) => {
+      const excludeSolvedIds = includeSolved ? undefined : getSolvedQuestionIds();
+      const questions = getQuestions({ category, difficulty, count, shuffle: true, excludeSolvedIds });
       if (questions.length === 0) return;
       setTestQuestions(questions);
       setTestAnswers({});

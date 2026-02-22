@@ -1,5 +1,7 @@
+import { useEffect, useRef } from 'react';
 import type { Question, Category, TestResult } from '../types';
 import { CATEGORY_LABELS, CATEGORY_ICONS } from '../types';
+import { markQuestionsSolved } from '../data';
 
 interface ResultScreenProps {
   questions: Question[];
@@ -10,6 +12,8 @@ interface ResultScreenProps {
 }
 
 export function ResultScreen({ questions, answers, startTime, onGoHome, onRetry }: ResultScreenProps) {
+  const savedRef = useRef(false);
+
   const totalQuestions = questions.length;
   const correctAnswers = questions.filter((q) => answers[q.id] === q.correctAnswerId).length;
   const score = Math.round((correctAnswers / totalQuestions) * 100);
@@ -27,25 +31,36 @@ export function ResultScreen({ questions, answers, startTime, onGoHome, onRetry 
     }
   });
 
-  // Save to localStorage
-  const result: TestResult = {
-    sessionId: `session-${Date.now()}`,
-    totalQuestions,
-    correctAnswers,
-    score,
-    timeSpent,
-    categoryBreakdown: categoryBreakdown as Record<Category, { total: number; correct: number }>,
-    completedAt: Date.now(),
-  };
+  // Save to localStorage and mark solved (once)
+  useEffect(() => {
+    if (savedRef.current) return;
+    savedRef.current = true;
 
-  // Save result
-  try {
-    const history = JSON.parse(localStorage.getItem('test-history') || '[]');
-    history.push(result);
-    localStorage.setItem('test-history', JSON.stringify(history));
-  } catch {
-    // Ignore
-  }
+    // Mark correctly answered questions as solved
+    const correctIds = questions
+      .filter((q) => answers[q.id] === q.correctAnswerId)
+      .map((q) => q.id);
+    markQuestionsSolved(correctIds);
+
+    // Save test result
+    const result: TestResult = {
+      sessionId: `session-${Date.now()}`,
+      totalQuestions,
+      correctAnswers,
+      score,
+      timeSpent,
+      categoryBreakdown: categoryBreakdown as Record<Category, { total: number; correct: number }>,
+      completedAt: Date.now(),
+    };
+
+    try {
+      const history = JSON.parse(localStorage.getItem('test-history') || '[]');
+      history.push(result);
+      localStorage.setItem('test-history', JSON.stringify(history));
+    } catch {
+      // Ignore
+    }
+  }, []);
 
   const getScoreEmoji = () => {
     if (score >= 90) return '🌟';
@@ -168,7 +183,7 @@ export function ResultScreen({ questions, answers, startTime, onGoHome, onRetry 
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span style={{ fontSize: 14, color: '#666' }}>
-                    #{i + 1} • {CATEGORY_LABELS[q.category]} • {q.difficulty}
+                    #{i + 1} {CATEGORY_LABELS[q.category]} {q.difficulty}
                   </span>
                   <span style={{ fontSize: 18 }}>{isQCorrect ? '✓' : '✗'}</span>
                 </div>

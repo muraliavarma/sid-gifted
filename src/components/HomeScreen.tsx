@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import type { Category, Difficulty } from '../types';
 import { CATEGORY_LABELS, CATEGORY_DESCRIPTIONS, CATEGORY_ICONS, DIFFICULTY_LABELS, DIFFICULTY_COLORS } from '../types';
-import { getQuestionCounts } from '../data';
+import { getQuestionCounts, getSolvedQuestionIds } from '../data';
 
 interface HomeScreenProps {
-  onStartTest: (category: Category | 'mixed', difficulty: Difficulty | 'mixed', count: number) => void;
+  onStartTest: (category: Category | 'mixed', difficulty: Difficulty | 'mixed', count: number, includeSolved: boolean) => void;
   onViewHistory: () => void;
 }
 
@@ -23,7 +23,12 @@ export function HomeScreen({ onStartTest, onViewHistory }: HomeScreenProps) {
   const [selectedCategory, setSelectedCategory] = useState<Category | 'mixed'>('mixed');
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty | 'mixed'>('mixed');
   const [questionCount, setQuestionCount] = useState(10);
-  const counts = getQuestionCounts();
+  const [includeSolved, setIncludeSolved] = useState(false);
+
+  const solvedIds = getSolvedQuestionIds();
+  const excludeIds = includeSolved ? undefined : solvedIds;
+  const counts = getQuestionCounts(excludeIds);
+  const totalCounts = getQuestionCounts(); // unfiltered for showing total
 
   const availableCount = selectedCategory === 'mixed'
     ? (selectedDifficulty === 'mixed' ? counts['all']['all'] : counts['all'][selectedDifficulty])
@@ -35,12 +40,42 @@ export function HomeScreen({ onStartTest, onViewHistory }: HomeScreenProps) {
     <div style={{ maxWidth: 800, margin: '0 auto', padding: '20px' }}>
       <header style={{ textAlign: 'center', marginBottom: 40 }}>
         <h1 style={{ fontSize: 32, color: '#1a237e', margin: 0 }}>
-          🧒 Gifted Test Prep
+          Gifted Test Prep
         </h1>
         <p style={{ color: '#666', fontSize: 16, marginTop: 8 }}>
           CogAT-style practice for Kindergarten (Georgia Gifted Program)
         </p>
       </header>
+
+      {/* Solved Toggle */}
+      <section style={{ marginBottom: 24 }}>
+        <label
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 10,
+            cursor: 'pointer',
+            padding: '10px 16px',
+            background: includeSolved ? '#E8F5E9' : '#F5F5F5',
+            border: includeSolved ? '2px solid #4CAF50' : '2px solid #e0e0e0',
+            borderRadius: 10,
+            transition: 'all 0.2s',
+          }}
+        >
+          <input
+            type="checkbox"
+            checked={includeSolved}
+            onChange={(e) => setIncludeSolved(e.target.checked)}
+            style={{ width: 18, height: 18, cursor: 'pointer' }}
+          />
+          <span style={{ fontWeight: 600, fontSize: 14, color: '#333' }}>
+            Include solved problems
+          </span>
+          <span style={{ fontSize: 13, color: '#888' }}>
+            ({solvedIds.size} solved)
+          </span>
+        </label>
+      </section>
 
       {/* Category Selection */}
       <section style={{ marginBottom: 32 }}>
@@ -54,6 +89,9 @@ export function HomeScreen({ onStartTest, onViewHistory }: HomeScreenProps) {
             const count = cat === 'mixed'
               ? counts['all'][selectedDifficulty === 'mixed' ? 'all' : selectedDifficulty]
               : counts[cat][selectedDifficulty === 'mixed' ? 'all' : selectedDifficulty];
+            const total = cat === 'mixed'
+              ? totalCounts['all'][selectedDifficulty === 'mixed' ? 'all' : selectedDifficulty]
+              : totalCounts[cat][selectedDifficulty === 'mixed' ? 'all' : selectedDifficulty];
 
             return (
               <button
@@ -74,7 +112,7 @@ export function HomeScreen({ onStartTest, onViewHistory }: HomeScreenProps) {
                 <div style={{ fontWeight: 600, fontSize: 14, color: '#333' }}>{label}</div>
                 <div style={{ fontSize: 12, color: '#888', marginTop: 4 }}>{desc}</div>
                 <div style={{ fontSize: 12, color: '#1976D2', marginTop: 6, fontWeight: 600 }}>
-                  {count} questions
+                  {count} available{!includeSolved && count !== total ? ` / ${total} total` : ''}
                 </div>
               </button>
             );
@@ -146,7 +184,7 @@ export function HomeScreen({ onStartTest, onViewHistory }: HomeScreenProps) {
       {/* Start Button */}
       <div style={{ display: 'flex', gap: 16, justifyContent: 'center', marginTop: 40 }}>
         <button
-          onClick={() => onStartTest(selectedCategory, selectedDifficulty, effectiveCount)}
+          onClick={() => onStartTest(selectedCategory, selectedDifficulty, effectiveCount, includeSolved)}
           disabled={availableCount === 0}
           style={{
             padding: '16px 48px',
