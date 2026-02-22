@@ -192,17 +192,17 @@ export const paperFolding: Question[] = [
       paper(10, 10, 140) +
       `<polygon points="150,10 150,55 105,10" fill="#FF7043" stroke="none"/>` +
       `<rect x="10" y="10" width="140" height="140" fill="none" stroke="#999" stroke-width="2"/>` +
-      foldLine(10, 150, 150, 10) +
-      foldArrow(130, 40, 50, 120)
+      foldLine(10, 10, 150, 150) +
+      foldArrow(120, 40, 40, 120)
     ),
     options: [
-      { id: 'a', label: 'Triangle with orange corner', visual: opt(`<polygon points="10,60 80,60 10,8" fill="#FFF" stroke="#999" stroke-width="2"/><polygon points="10,8 10,28 30,8" fill="#FF7043" stroke="none"/><polygon points="10,60 80,60 10,8" fill="none" stroke="#999" stroke-width="2"/>`) },
+      { id: 'a', label: 'Triangle with orange corner', visual: opt(`<polygon points="10,60 80,60 10,8" fill="#FFF" stroke="#999" stroke-width="2"/><polygon points="10,60 10,40 30,60" fill="#FF7043" stroke="none"/><polygon points="10,60 80,60 10,8" fill="none" stroke="#999" stroke-width="2"/>`) },
       { id: 'b', label: 'Plain triangle', visual: opt(`<polygon points="10,60 80,60 10,8" fill="#FFF" stroke="#999" stroke-width="2"/>`) },
       { id: 'c', label: 'Rectangle', visual: opt(`<rect x="10" y="15" width="70" height="40" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/>`) },
       { id: 'd', label: 'Triangle all orange', visual: opt(`<polygon points="10,60 80,60 10,8" fill="#FF7043" stroke="#999" stroke-width="2"/>`) },
     ],
     correctAnswerId: 'a',
-    explanation: 'Folding diagonally makes a triangle. The orange corner from the top-right folds over and shows on the front.',
+    explanation: 'Folding diagonally makes a triangle. The orange corner from the top-right folds over and shows at the bottom corner.',
     hint: 'What shape do you get when you fold a square corner-to-corner? And where does the orange end up?',
   },
 
