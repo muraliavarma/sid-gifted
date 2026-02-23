@@ -239,29 +239,29 @@ export const paperFolding: Question[] = [
     hint: 'How many layers of paper did the scissors cut through? Each layer gets a hole.',
   },
 
-  // pf-e-005: Square with orange triangle in top-right corner. Diagonal fold (top-right to bottom-left).
-  // Result: triangle with orange corner visible.
+  // pf-e-005: Square with entire top-right half orange. Diagonal fold TL→BR.
+  // Result: triangle (bottom-left shape) all orange on front (folded orange half covers everything).
   {
     id: 'pf-e-005',
     category: 'paper-folding',
     difficulty: 'easy',
-    prompt: 'The paper folds along the diagonal dashed line. What shape do you get?',
+    prompt: 'The top-right half is orange. The paper folds along the diagonal. What do you see?',
     visual: qSvg(
       paper(10, 10, 140) +
-      `<polygon points="150,10 150,55 105,10" fill="#FF7043" stroke="none"/>` +
+      `<polygon points="10,10 150,10 150,150" fill="#FF7043" stroke="none"/>` +
       `<rect x="10" y="10" width="140" height="140" fill="none" stroke="#999" stroke-width="2"/>` +
       foldLine(10, 10, 150, 150) +
       foldArrow(120, 40, 40, 120)
     ),
     options: [
-      { id: 'a', label: 'Triangle with orange corner', visual: opt(`<polygon points="10,60 80,60 10,8" fill="#FFF" stroke="#999" stroke-width="2"/><polygon points="10,60 10,40 30,60" fill="#FF7043" stroke="none"/><polygon points="10,60 80,60 10,8" fill="none" stroke="#999" stroke-width="2"/>`) },
-      { id: 'b', label: 'Plain triangle', visual: opt(`<polygon points="10,60 80,60 10,8" fill="#FFF" stroke="#999" stroke-width="2"/>`) },
-      { id: 'c', label: 'Rectangle', visual: opt(`<rect x="10" y="15" width="70" height="40" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/>`) },
-      { id: 'd', label: 'Triangle all orange', visual: opt(`<polygon points="10,60 80,60 10,8" fill="#FF7043" stroke="#999" stroke-width="2"/>`) },
+      { id: 'a', label: 'Triangle all orange', visual: opt(`<polygon points="8,8 8,62 76,62" fill="#FF7043" stroke="#999" stroke-width="2"/>`) },
+      { id: 'b', label: 'Triangle with orange corner', visual: opt(`<polygon points="8,8 8,62 76,62" fill="#FFF" stroke="#999" stroke-width="2"/><polygon points="8,62 8,42 28,62" fill="#FF7043" stroke="none"/><polygon points="8,8 8,62 76,62" fill="none" stroke="#999" stroke-width="2"/>`) },
+      { id: 'c', label: 'Plain white triangle', visual: opt(`<polygon points="8,8 8,62 76,62" fill="#FFF" stroke="#999" stroke-width="2"/>`) },
+      { id: 'd', label: 'Rectangle', visual: opt(`<rect x="10" y="15" width="70" height="40" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/>`) },
     ],
     correctAnswerId: 'a',
-    explanation: 'Folding diagonally makes a triangle. The orange corner from the top-right folds over and shows at the bottom corner.',
-    hint: 'What shape do you get when you fold a square corner-to-corner? And where does the orange end up?',
+    explanation: 'Folding diagonally makes a triangle. The entire orange half folds on top of the white half. Since colored paper looks the same from both sides, you see an all-orange triangle.',
+    hint: 'The orange half folds on top of the white half. Colored paper looks the same from both sides.',
   },
 
   // pf-e-006: Fold-cut-unfold. Vertical fold (right onto left). Corner triangle snip at fold edge.
@@ -297,107 +297,111 @@ export const paperFolding: Question[] = [
   //  MEDIUM (pf-m-001 to pf-m-008)
   // =====================================================================
 
-  // pf-m-001: Square with blue dot top-left, red dot bottom-right. Vertical fold (left onto right).
-  // Result: tall rectangle, red dot visible on right, blue dot on back side near top-right.
+  // pf-m-001: Left half blue, right half red. Vertical fold (left onto right).
+  // Result: tall rectangle, blue on front (back of folded left half, colored-through).
   {
     id: 'pf-m-001',
     category: 'paper-folding',
     difficulty: 'medium',
-    prompt: 'There is a blue dot and a red dot. The left side folds onto the right. What do you see from the front?',
+    prompt: 'The left half is blue and the right half is red. The left side folds onto the right. What do you see from the front?',
     visual: qSvg(
       paper(10, 10, 140) +
-      `<circle cx="40" cy="40" r="12" fill="#42A5F5"/>` +
-      `<circle cx="120" cy="120" r="12" fill="#E53935"/>` +
+      `<rect x="10" y="10" width="70" height="140" fill="#42A5F5"/>` +
+      `<rect x="80" y="10" width="70" height="140" fill="#EF5350"/>` +
+      `<rect x="10" y="10" width="140" height="140" fill="none" stroke="#999" stroke-width="2"/>` +
       foldLine(80, 10, 80, 150) +
       foldArrow(30, 80, 120, 80)
     ),
     options: [
-      { id: 'a', label: 'Rectangle with both dots', visual: opt(`<rect x="25" y="5" width="35" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><circle cx="42" cy="18" r="6" fill="#42A5F5"/><circle cx="42" cy="50" r="6" fill="#E53935"/>`) },
-      { id: 'b', label: 'Rectangle with red dot only', visual: opt(`<rect x="25" y="5" width="35" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><circle cx="42" cy="50" r="6" fill="#E53935"/>`) },
-      { id: 'c', label: 'Rectangle with blue dot only', visual: opt(`<rect x="25" y="5" width="35" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><circle cx="42" cy="18" r="6" fill="#42A5F5"/>`) },
-      { id: 'd', label: 'Rectangle with no dots', visual: opt(`<rect x="25" y="5" width="35" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/>`) },
+      { id: 'a', label: 'Blue rectangle', visual: opt(`<rect x="22" y="5" width="40" height="60" fill="#42A5F5" stroke="#999" stroke-width="2" rx="2"/>`) },
+      { id: 'b', label: 'Red rectangle', visual: opt(`<rect x="22" y="5" width="40" height="60" fill="#EF5350" stroke="#999" stroke-width="2" rx="2"/>`) },
+      { id: 'c', label: 'Half blue, half red', visual: opt(`<rect x="22" y="5" width="40" height="60" fill="#EF5350" stroke="#999" stroke-width="2" rx="2"/><rect x="22" y="5" width="20" height="60" fill="#42A5F5" stroke="none"/>`) },
+      { id: 'd', label: 'White rectangle', visual: opt(`<rect x="22" y="5" width="40" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/>`) },
     ],
-    correctAnswerId: 'b',
-    explanation: 'The left side folds onto the right. The blue dot was on the left, so it ends up hidden behind. The red dot was already on the right side and stays visible.',
-    hint: 'Which dot is on the side that stays facing you?',
+    correctAnswerId: 'a',
+    explanation: 'The blue left half folds onto the red right half. Since colored paper is the same on both sides, you see blue on top covering the red underneath. The result is a tall blue rectangle.',
+    hint: 'Which color is on the side that folds on top? Colored paper looks the same from both sides.',
   },
 
-  // pf-m-002: Square with green stripe across top. Diagonal fold (top-left to bottom-right).
-  // Result: triangle, green stripe visible along one edge (hypotenuse edge area).
+  // pf-m-002: Square with wide green stripe across top (~35%). Diagonal fold TL→BR.
+  // Result: triangle with visible green corner area from the folded stripe.
   {
     id: 'pf-m-002',
     category: 'paper-folding',
     difficulty: 'medium',
-    prompt: 'The paper has a green stripe at the top. It folds along the diagonal. What does it look like?',
+    prompt: 'The paper has a wide green stripe at the top. It folds along the diagonal. What does it look like?',
     visual: qSvg(
       paper(10, 10, 140) +
-      `<rect x="10" y="10" width="140" height="25" fill="#66BB6A" stroke="none"/>` +
+      `<rect x="10" y="10" width="140" height="50" fill="#66BB6A" stroke="none"/>` +
       `<rect x="10" y="10" width="140" height="140" fill="none" stroke="#999" stroke-width="2"/>` +
       foldLine(10, 10, 150, 150) +
       foldArrow(40, 30, 30, 40)
     ),
     options: [
-      { id: 'a', label: 'Triangle with green corner', visual: opt(`<polygon points="75,8 75,62 15,62" fill="#FFF" stroke="#999" stroke-width="2"/><polygon points="75,8 75,22 61,8" fill="#66BB6A" stroke="none"/><polygon points="75,8 75,62 15,62" fill="none" stroke="#999" stroke-width="2"/>`) },
+      { id: 'a', label: 'Triangle with green corner', visual: opt(`<polygon points="75,8 75,62 15,62" fill="#FFF" stroke="#999" stroke-width="2"/><polygon points="75,8 75,36 47,8" fill="#66BB6A" stroke="none"/><polygon points="75,8 75,62 15,62" fill="none" stroke="#999" stroke-width="2"/>`) },
       { id: 'b', label: 'Triangle all green', visual: opt(`<polygon points="75,8 75,62 15,62" fill="#66BB6A" stroke="#999" stroke-width="2"/>`) },
       { id: 'c', label: 'Plain triangle', visual: opt(`<polygon points="75,8 75,62 15,62" fill="#FFF" stroke="#999" stroke-width="2"/>`) },
-      { id: 'd', label: 'Rectangle with green stripe', visual: opt(`<rect x="10" y="15" width="70" height="40" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><rect x="10" y="15" width="70" height="10" fill="#66BB6A" stroke="none"/>`) },
+      { id: 'd', label: 'Rectangle with green stripe', visual: opt(`<rect x="10" y="15" width="70" height="40" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><rect x="10" y="15" width="70" height="14" fill="#66BB6A" stroke="none"/>`) },
     ],
     correctAnswerId: 'a',
-    explanation: 'Folding along the diagonal creates a triangle. The green stripe from the top folds over and shows as a small green corner area.',
-    hint: 'The paper becomes a triangle. The green stripe was at the top -- where does it end up after folding?',
+    explanation: 'Folding along the diagonal creates a triangle. The wide green stripe from the top folds over and shows as a large green corner area on the result.',
+    hint: 'The paper becomes a triangle. The green stripe was at the top — where does it end up after folding?',
   },
 
-  // pf-m-003: Square with red circle in center. Fold top-right corner to center.
-  // Result: square with a folded-over triangle corner, circle partially covered.
+  // pf-m-003: Left half yellow, red star on right half. Vertical fold (left onto right).
+  // Result: tall yellow rectangle (folded yellow covers the star).
   {
     id: 'pf-m-003',
     category: 'paper-folding',
     difficulty: 'medium',
-    prompt: 'The top-right corner folds down to the center. What does the paper look like?',
+    prompt: 'The left half is yellow and there is a red star on the right half. The left side folds onto the right. What do you see?',
     visual: qSvg(
       paper(10, 10, 140) +
-      `<circle cx="80" cy="80" r="18" fill="#E53935" stroke="#C62828" stroke-width="1.5"/>` +
-      foldLine(80, 10, 150, 80) +
-      foldArrow(140, 20, 85, 75)
+      `<rect x="10" y="10" width="70" height="140" fill="#FDD835"/>` +
+      `<rect x="80" y="10" width="70" height="140" fill="#FFF"/>` +
+      `<polygon points="115,55 120,70 136,70 124,80 128,95 115,85 102,95 106,80 94,70 110,70" fill="#EF5350" stroke="#C62828" stroke-width="1"/>` +
+      `<rect x="10" y="10" width="140" height="140" fill="none" stroke="#999" stroke-width="2"/>` +
+      foldLine(80, 10, 80, 150) +
+      foldArrow(30, 80, 120, 80)
     ),
     options: [
-      { id: 'a', label: 'Square with full circle, folded corner', visual: opt(`<rect x="10" y="5" width="60" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><circle cx="40" cy="35" r="10" fill="#E53935" stroke="#C62828" stroke-width="1"/><polygon points="40,5 70,5 70,35" fill="#EEE" stroke="#999" stroke-width="1"/>`) },
-      { id: 'b', label: 'Square with no circle', visual: opt(`<rect x="10" y="5" width="60" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><polygon points="40,5 70,5 70,35" fill="#EEE" stroke="#999" stroke-width="1"/>`) },
-      { id: 'c', label: 'Plain square with circle', visual: opt(`<rect x="10" y="5" width="60" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><circle cx="40" cy="35" r="10" fill="#E53935" stroke="#C62828" stroke-width="1"/>`) },
-      { id: 'd', label: 'Triangle with circle', visual: opt(`<polygon points="10,62 75,62 10,5" fill="#FFF" stroke="#999" stroke-width="2"/><circle cx="30" cy="45" r="9" fill="#E53935" stroke="#C62828" stroke-width="1"/>`) },
+      { id: 'a', label: 'Yellow rectangle', visual: opt(`<rect x="22" y="5" width="40" height="60" fill="#FDD835" stroke="#999" stroke-width="2" rx="2"/>`) },
+      { id: 'b', label: 'Rectangle with red star', visual: opt(`<rect x="22" y="5" width="40" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><polygon points="42,18 45,28 55,28 47,34 50,44 42,38 34,44 37,34 29,28 39,28" fill="#EF5350" stroke="#C62828" stroke-width="0.5"/>`) },
+      { id: 'c', label: 'Yellow with star showing', visual: opt(`<rect x="22" y="5" width="40" height="60" fill="#FDD835" stroke="#999" stroke-width="2" rx="2"/><polygon points="42,18 45,28 55,28 47,34 50,44 42,38 34,44 37,34 29,28 39,28" fill="#EF5350" stroke="#C62828" stroke-width="0.5"/>`) },
+      { id: 'd', label: 'Plain white rectangle', visual: opt(`<rect x="22" y="5" width="40" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/>`) },
     ],
     correctAnswerId: 'a',
-    explanation: 'Only the top-right corner folds down. The circle is mostly visible but the folded triangle covers part of it. The paper is still a square shape with a triangular flap.',
-    hint: 'Only a corner folds, not the whole paper. What shape does the paper stay?',
+    explanation: 'The yellow left half folds on top of the right half, covering the red star. Since colored paper looks the same on both sides, the front shows all yellow.',
+    hint: 'The yellow half folds on top and covers everything underneath. What color do you see?',
   },
 
   // pf-m-004: Square divided into 4 colored quadrants (red TL, blue TR, green BL, yellow BR).
-  // Horizontal fold (top down). Result: wide rectangle showing green (BL) and yellow (BR) on front,
-  // red and blue hidden behind.
+  // Horizontal fold (top down onto bottom). With colored-through: top goes on top, you see
+  // back of top half = red and blue.
   {
     id: 'pf-m-004',
     category: 'paper-folding',
     difficulty: 'medium',
-    prompt: 'This paper has four colored squares. The top folds down. What colors do you see on front?',
+    prompt: 'This paper has four colored squares. The top folds down onto the bottom. What colors do you see on front?',
     visual: qSvg(
       paper(10, 10, 140) +
       `<rect x="10" y="10" width="70" height="70" fill="#EF5350"/>` +
       `<rect x="80" y="10" width="70" height="70" fill="#42A5F5"/>` +
       `<rect x="10" y="80" width="70" height="70" fill="#66BB6A"/>` +
-      `<rect x="80" y="80" width="70" height="70" fill="#FDD835"/>` +
+      `<rect x="80" y="80" width="70" height="70" fill="#FFCA28"/>` +
       `<rect x="10" y="10" width="140" height="140" fill="none" stroke="#999" stroke-width="2"/>` +
       foldLine(10, 80, 150, 80) +
       foldArrow(80, 30, 80, 120)
     ),
     options: [
-      { id: 'a', label: 'Red and blue', visual: opt(`<rect x="10" y="20" width="35" height="35" fill="#EF5350" stroke="#999" stroke-width="1.5"/><rect x="45" y="20" width="35" height="35" fill="#42A5F5" stroke="#999" stroke-width="1.5"/>`) },
-      { id: 'b', label: 'Green and yellow', visual: opt(`<rect x="10" y="20" width="35" height="35" fill="#66BB6A" stroke="#999" stroke-width="1.5"/><rect x="45" y="20" width="35" height="35" fill="#FDD835" stroke="#999" stroke-width="1.5"/>`) },
-      { id: 'c', label: 'Red and yellow', visual: opt(`<rect x="10" y="20" width="35" height="35" fill="#EF5350" stroke="#999" stroke-width="1.5"/><rect x="45" y="20" width="35" height="35" fill="#FDD835" stroke="#999" stroke-width="1.5"/>`) },
-      { id: 'd', label: 'All four colors', visual: opt(`<rect x="10" y="8" width="35" height="25" fill="#EF5350" stroke="#999" stroke-width="1"/><rect x="45" y="8" width="35" height="25" fill="#42A5F5" stroke="#999" stroke-width="1"/><rect x="10" y="33" width="35" height="25" fill="#66BB6A" stroke="#999" stroke-width="1"/><rect x="45" y="33" width="35" height="25" fill="#FDD835" stroke="#999" stroke-width="1"/>`) },
+      { id: 'a', label: 'Red and blue', visual: opt(`<rect x="8" y="18" width="36" height="36" fill="#EF5350" stroke="#999" stroke-width="1.5"/><rect x="44" y="18" width="36" height="36" fill="#42A5F5" stroke="#999" stroke-width="1.5"/>`) },
+      { id: 'b', label: 'Green and yellow', visual: opt(`<rect x="8" y="18" width="36" height="36" fill="#66BB6A" stroke="#999" stroke-width="1.5"/><rect x="44" y="18" width="36" height="36" fill="#FFCA28" stroke="#999" stroke-width="1.5"/>`) },
+      { id: 'c', label: 'Red and yellow', visual: opt(`<rect x="8" y="18" width="36" height="36" fill="#EF5350" stroke="#999" stroke-width="1.5"/><rect x="44" y="18" width="36" height="36" fill="#FFCA28" stroke="#999" stroke-width="1.5"/>`) },
+      { id: 'd', label: 'All four colors', visual: opt(`<rect x="8" y="8" width="36" height="26" fill="#EF5350" stroke="#999" stroke-width="1"/><rect x="44" y="8" width="36" height="26" fill="#42A5F5" stroke="#999" stroke-width="1"/><rect x="8" y="34" width="36" height="26" fill="#66BB6A" stroke="#999" stroke-width="1"/><rect x="44" y="34" width="36" height="26" fill="#FFCA28" stroke="#999" stroke-width="1"/>`) },
     ],
-    correctAnswerId: 'b',
-    explanation: 'The top half (red and blue) folds down onto the bottom half (green and yellow). The bottom colors stay visible on front: green on the left, yellow on the right.',
-    hint: 'The top folds down and hides. Which colors were on the bottom?',
+    correctAnswerId: 'a',
+    explanation: 'The top half (red and blue) folds down on top of the bottom half. Since colored paper looks the same on both sides, you see red on the left and blue on the right.',
+    hint: 'The top half folds on top. Colored paper looks the same from both sides. What colors were on top?',
   },
 
   // pf-m-005: Fold-cut-unfold. Vertical fold (right onto left). Circle cut AWAY from fold edge.
@@ -429,29 +433,29 @@ export const paperFolding: Question[] = [
     hint: 'The circle is NOT at the fold — it is in the middle of the folded piece. Both layers get a hole. Where do the holes end up when you unfold?',
   },
 
-  // pf-m-006: Square with diagonal stripe from top-left to bottom-right. Fold vertically (left onto right).
-  // Result: tall rectangle with stripe visible as a diagonal going from top edge to bottom.
+  // pf-m-006: Square with orange horizontal stripe across middle. Fold bottom up.
+  // Result: wide rectangle with stripe at bottom edge.
   {
     id: 'pf-m-006',
     category: 'paper-folding',
     difficulty: 'medium',
-    prompt: 'There is a diagonal stripe on the paper. The left side folds onto the right. What do you see?',
+    prompt: 'There is an orange stripe across the middle. The bottom half folds up onto the top. What do you see?',
     visual: qSvg(
       paper(10, 10, 140) +
-      `<line x1="10" y1="10" x2="150" y2="150" stroke="#FF7043" stroke-width="12"/>` +
+      `<rect x="10" y="65" width="140" height="30" fill="#FF7043" stroke="none"/>` +
       `<rect x="10" y="10" width="140" height="140" fill="none" stroke="#999" stroke-width="2"/>` +
-      foldLine(80, 10, 80, 150) +
-      foldArrow(30, 40, 120, 40)
+      foldLine(10, 80, 150, 80) +
+      foldArrow(140, 130, 140, 40)
     ),
     options: [
-      { id: 'a', label: 'Rectangle with one diagonal', visual: opt(`<rect x="22" y="5" width="38" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><line x1="22" y1="65" x2="60" y2="5" stroke="#FF7043" stroke-width="5"/>`) },
-      { id: 'b', label: 'Rectangle with X pattern', visual: opt(`<rect x="22" y="5" width="38" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><line x1="60" y1="5" x2="22" y2="65" stroke="#FF7043" stroke-width="5"/><line x1="22" y1="5" x2="60" y2="65" stroke="#FF7043" stroke-width="4" opacity="0.5"/>`) },
-      { id: 'c', label: 'Rectangle with horizontal stripe', visual: opt(`<rect x="22" y="5" width="38" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><line x1="22" y1="35" x2="60" y2="35" stroke="#FF7043" stroke-width="5"/>`) },
-      { id: 'd', label: 'Plain rectangle', visual: opt(`<rect x="22" y="5" width="38" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/>`) },
+      { id: 'a', label: 'Wide rectangle, stripe at bottom', visual: opt(`<rect x="5" y="10" width="80" height="40" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><rect x="5" y="38" width="80" height="12" fill="#FF7043" stroke="none"/><rect x="5" y="10" width="80" height="40" fill="none" stroke="#999" stroke-width="2" rx="2"/>`) },
+      { id: 'b', label: 'Wide rectangle, stripe at top', visual: opt(`<rect x="5" y="10" width="80" height="40" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><rect x="5" y="10" width="80" height="12" fill="#FF7043" stroke="none"/><rect x="5" y="10" width="80" height="40" fill="none" stroke="#999" stroke-width="2" rx="2"/>`) },
+      { id: 'c', label: 'Wide rectangle, stripe in middle', visual: opt(`<rect x="5" y="10" width="80" height="40" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><rect x="5" y="24" width="80" height="12" fill="#FF7043" stroke="none"/><rect x="5" y="10" width="80" height="40" fill="none" stroke="#999" stroke-width="2" rx="2"/>`) },
+      { id: 'd', label: 'Wide rectangle, no stripe', visual: opt(`<rect x="5" y="10" width="80" height="40" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/>`) },
     ],
-    correctAnswerId: 'b',
-    explanation: 'The stripe goes diagonally across both halves. When the left side folds onto the right, the left half stripe mirrors and overlaps. You see an X pattern from the two crossing diagonals.',
-    hint: 'The stripe is on both halves. When one half folds onto the other, what pattern do the two lines make?',
+    correctAnswerId: 'a',
+    explanation: 'The stripe sits right at the fold line. When the bottom folds up on top, the bottom part of the stripe maps to the bottom edge of the resulting wide rectangle. You see the stripe at the bottom.',
+    hint: 'The stripe sits right at the fold. After folding, where does the bottom part of the stripe end up in the new shorter rectangle?',
   },
 
   // pf-m-007: Fold-cut-unfold. Vertical fold (right onto left). Half-heart at fold edge.
@@ -516,35 +520,35 @@ export const paperFolding: Question[] = [
   //  HARD (pf-h-001 to pf-h-008)
   // =====================================================================
 
-  // pf-h-001: Square with red corner top-left. First fold: in half vertically (left onto right).
-  // Second fold: in half horizontally (top down). Result: quarter-size square with red corner visible.
+  // pf-h-001: Square with LARGE red corner top-left (quarter-paper). First fold: left onto right.
+  // Second fold: top down. Result: quarter-size square with red corner visible at top-right.
   {
     id: 'pf-h-001',
     category: 'paper-folding',
     difficulty: 'hard',
     prompt: 'The paper folds twice! First left onto right, then top down. What do you see at the end?',
     visual: qSvg3(
-      // Panel 1: original square with red corner top-left + fold 1 indicators
+      // Panel 1: original square with LARGE red triangle top-left + fold 1 indicators
       paper(10, 10, 140) +
-      `<polygon points="10,10 60,10 10,60" fill="#EF5350" stroke="none"/>` +
+      `<polygon points="10,10 80,10 10,80" fill="#EF5350" stroke="none"/>` +
       `<rect x="10" y="10" width="140" height="140" fill="none" stroke="#999" stroke-width="2"/>` +
       foldLine(80, 10, 80, 150) +
       foldArrow(30, 80, 120, 80),
-      // Panel 2: after fold 1, tall rectangle, red corner visible top-right (mirrored) + fold 2 indicators
+      // Panel 2: after fold 1, tall rectangle, LARGE red triangle at top-right + fold 2 indicators
       `<rect x="30" y="10" width="70" height="140" fill="#FFF" stroke="#999" stroke-width="2"/>` +
-      `<polygon points="100,10 60,10 100,50" fill="#EF5350" stroke="none"/>` +
+      `<polygon points="100,10 30,10 100,80" fill="#EF5350" stroke="none"/>` +
       `<rect x="30" y="10" width="70" height="140" fill="none" stroke="#999" stroke-width="2"/>` +
       foldLine(30, 80, 100, 80) +
       foldArrow(65, 30, 65, 120)
     ),
     options: [
-      { id: 'a', label: 'Small square with red corner', visual: opt(`<rect x="20" y="10" width="45" height="45" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><polygon points="65,10 45,10 65,30" fill="#EF5350" stroke="none"/>`) },
-      { id: 'b', label: 'Small plain square', visual: opt(`<rect x="20" y="10" width="45" height="45" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/>`) },
-      { id: 'c', label: 'Small all-red square', visual: opt(`<rect x="20" y="10" width="45" height="45" fill="#EF5350" stroke="#999" stroke-width="2" rx="2"/>`) },
-      { id: 'd', label: 'Small rectangle with red corner', visual: opt(`<rect x="15" y="15" width="55" height="35" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><polygon points="15,15 35,15 15,35" fill="#EF5350" stroke="none"/>`) },
+      { id: 'a', label: 'Small square with red corner', visual: opt(`<rect x="18" y="8" width="50" height="50" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><polygon points="68,8 38,8 68,38" fill="#EF5350" stroke="none"/><rect x="18" y="8" width="50" height="50" fill="none" stroke="#999" stroke-width="2" rx="2"/>`) },
+      { id: 'b', label: 'Small plain square', visual: opt(`<rect x="18" y="8" width="50" height="50" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/>`) },
+      { id: 'c', label: 'Small all-red square', visual: opt(`<rect x="18" y="8" width="50" height="50" fill="#EF5350" stroke="#999" stroke-width="2" rx="2"/>`) },
+      { id: 'd', label: 'Small rectangle with red corner', visual: opt(`<rect x="12" y="15" width="60" height="38" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><polygon points="12,15 35,15 12,38" fill="#EF5350" stroke="none"/>`) },
     ],
     correctAnswerId: 'a',
-    explanation: 'First fold: left onto right makes a tall rectangle. The red corner from top-left mirrors to top-right. Second fold: top down makes a small square. The red corner is still visible in the top-right area.',
+    explanation: 'First fold: left onto right makes a tall rectangle. The large red corner from top-left mirrors to top-right. Second fold: top down makes a small square. The red corner is still visible in the top-right area.',
     hint: 'Follow the red corner through each fold. After folding left onto right, where is it? Then fold that piece top-down.',
   },
 
@@ -648,7 +652,7 @@ export const paperFolding: Question[] = [
   },
 
   // pf-h-005: Square with stripes only on bottom half. Fold bottom up then fold left onto right.
-  // Result: small square, stripes on front.
+  // Result: small square, stripes on front. (Thicker stripes for visibility.)
   {
     id: 'pf-h-005',
     category: 'paper-folding',
@@ -657,62 +661,61 @@ export const paperFolding: Question[] = [
     visual: qSvg3(
       // Panel 1: square with horizontal stripes on bottom half + fold 1 indicators
       paper(10, 10, 140) +
-      `<line x1="10" y1="90" x2="150" y2="90" stroke="#FF7043" stroke-width="4"/>` +
-      `<line x1="10" y1="105" x2="150" y2="105" stroke="#FF7043" stroke-width="4"/>` +
-      `<line x1="10" y1="120" x2="150" y2="120" stroke="#FF7043" stroke-width="4"/>` +
-      `<line x1="10" y1="135" x2="150" y2="135" stroke="#FF7043" stroke-width="4"/>` +
+      `<line x1="10" y1="90" x2="150" y2="90" stroke="#FF7043" stroke-width="5"/>` +
+      `<line x1="10" y1="105" x2="150" y2="105" stroke="#FF7043" stroke-width="5"/>` +
+      `<line x1="10" y1="120" x2="150" y2="120" stroke="#FF7043" stroke-width="5"/>` +
+      `<line x1="10" y1="135" x2="150" y2="135" stroke="#FF7043" stroke-width="5"/>` +
       `<rect x="10" y="10" width="140" height="140" fill="none" stroke="#999" stroke-width="2"/>` +
       foldLine(10, 80, 150, 80) +
       foldArrow(140, 130, 140, 40),
       // Panel 2: wide rectangle after fold 1 (stripes on front) + fold 2 indicators
       `<rect x="10" y="45" width="140" height="70" fill="#FFF" stroke="#999" stroke-width="2"/>` +
-      `<line x1="10" y1="55" x2="150" y2="55" stroke="#FF7043" stroke-width="3"/>` +
-      `<line x1="10" y1="67" x2="150" y2="67" stroke="#FF7043" stroke-width="3"/>` +
-      `<line x1="10" y1="79" x2="150" y2="79" stroke="#FF7043" stroke-width="3"/>` +
-      `<line x1="10" y1="91" x2="150" y2="91" stroke="#FF7043" stroke-width="3"/>` +
+      `<line x1="10" y1="55" x2="150" y2="55" stroke="#FF7043" stroke-width="4"/>` +
+      `<line x1="10" y1="67" x2="150" y2="67" stroke="#FF7043" stroke-width="4"/>` +
+      `<line x1="10" y1="79" x2="150" y2="79" stroke="#FF7043" stroke-width="4"/>` +
+      `<line x1="10" y1="91" x2="150" y2="91" stroke="#FF7043" stroke-width="4"/>` +
       `<rect x="10" y="45" width="140" height="70" fill="none" stroke="#999" stroke-width="2"/>` +
       foldLine(80, 45, 80, 115) +
       foldArrow(30, 80, 120, 80)
     ),
     options: [
-      { id: 'a', label: 'Small square with stripes', visual: opt(`<rect x="20" y="10" width="45" height="45" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><line x1="20" y1="18" x2="65" y2="18" stroke="#FF7043" stroke-width="3"/><line x1="20" y1="28" x2="65" y2="28" stroke="#FF7043" stroke-width="3"/><line x1="20" y1="38" x2="65" y2="38" stroke="#FF7043" stroke-width="3"/><line x1="20" y1="48" x2="65" y2="48" stroke="#FF7043" stroke-width="3"/>`) },
-      { id: 'b', label: 'Small plain square', visual: opt(`<rect x="20" y="10" width="45" height="45" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/>`) },
-      { id: 'c', label: 'Small rectangle with stripes', visual: opt(`<rect x="10" y="22" width="65" height="30" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><line x1="10" y1="28" x2="75" y2="28" stroke="#FF7043" stroke-width="2.5"/><line x1="10" y1="36" x2="75" y2="36" stroke="#FF7043" stroke-width="2.5"/><line x1="10" y1="44" x2="75" y2="44" stroke="#FF7043" stroke-width="2.5"/>`) },
-      { id: 'd', label: 'Small triangle with stripes', visual: opt(`<polygon points="42,10 15,55 70,55" fill="#FFF" stroke="#999" stroke-width="2"/><line x1="25" y1="35" x2="60" y2="35" stroke="#FF7043" stroke-width="2.5"/><line x1="20" y1="45" x2="65" y2="45" stroke="#FF7043" stroke-width="2.5"/>`) },
+      { id: 'a', label: 'Small square with stripes', visual: opt(`<rect x="18" y="8" width="50" height="50" fill="#FFF" stroke="#999" stroke-width="2.5" rx="2"/><line x1="18" y1="17" x2="68" y2="17" stroke="#FF7043" stroke-width="3"/><line x1="18" y1="27" x2="68" y2="27" stroke="#FF7043" stroke-width="3"/><line x1="18" y1="37" x2="68" y2="37" stroke="#FF7043" stroke-width="3"/><line x1="18" y1="47" x2="68" y2="47" stroke="#FF7043" stroke-width="3"/>`) },
+      { id: 'b', label: 'Small plain square', visual: opt(`<rect x="18" y="8" width="50" height="50" fill="#FFF" stroke="#999" stroke-width="2.5" rx="2"/>`) },
+      { id: 'c', label: 'Small rectangle with stripes', visual: opt(`<rect x="10" y="22" width="65" height="30" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><line x1="10" y1="28" x2="75" y2="28" stroke="#FF7043" stroke-width="3"/><line x1="10" y1="36" x2="75" y2="36" stroke="#FF7043" stroke-width="3"/><line x1="10" y1="44" x2="75" y2="44" stroke="#FF7043" stroke-width="3"/>`) },
+      { id: 'd', label: 'Small triangle with stripes', visual: opt(`<polygon points="42,10 15,55 70,55" fill="#FFF" stroke="#999" stroke-width="2"/><line x1="25" y1="35" x2="60" y2="35" stroke="#FF7043" stroke-width="3"/><line x1="20" y1="45" x2="65" y2="45" stroke="#FF7043" stroke-width="3"/>`) },
     ],
     correctAnswerId: 'a',
     explanation: 'First fold: bottom up makes a wide rectangle with stripes on front. Second fold: left onto right makes a small square. The stripes are still facing you.',
     hint: 'After the first fold, the stripes face you. The second fold just makes it smaller. Does the front side change?',
   },
 
-  // pf-h-006: Square with a circle in each half (left=red, right=blue). Fold right onto left.
-  // Result: tall rectangle, blue circle on front (covering red circle behind it).
+  // pf-h-006: Square with orange circle left, blue circle right. Fold right onto left.
+  // Result: tall rectangle, blue circle on front (colored-through, back of right half on top).
   {
     id: 'pf-h-006',
     category: 'paper-folding',
     difficulty: 'hard',
-    prompt: 'There is a red circle on the left and a blue circle on the right. The right side folds onto the left. What do you see?',
+    prompt: 'There is an orange circle on the left and a blue circle on the right. The right side folds onto the left. What do you see?',
     visual: qSvg(
       paper(10, 10, 140) +
-      `<circle cx="45" cy="80" r="20" fill="#EF5350" stroke="#C62828" stroke-width="1.5"/>` +
-      `<circle cx="115" cy="80" r="20" fill="#42A5F5" stroke="#1565C0" stroke-width="1.5"/>` +
+      `<circle cx="45" cy="80" r="24" fill="#FF7043" stroke="#E64A19" stroke-width="1.5"/>` +
+      `<circle cx="115" cy="80" r="24" fill="#42A5F5" stroke="#1565C0" stroke-width="1.5"/>` +
       foldLine(80, 10, 80, 150) +
       foldArrow(130, 40, 50, 40)
     ),
     options: [
-      { id: 'a', label: 'Rectangle with red circle', visual: opt(`<rect x="23" y="5" width="38" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><circle cx="42" cy="35" r="12" fill="#EF5350" stroke="#C62828" stroke-width="1.5"/>`) },
-      { id: 'b', label: 'Rectangle with blue circle', visual: opt(`<rect x="23" y="5" width="38" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><circle cx="42" cy="35" r="12" fill="#42A5F5" stroke="#1565C0" stroke-width="1.5"/>`) },
-      { id: 'c', label: 'Rectangle with both circles', visual: opt(`<rect x="23" y="5" width="38" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><circle cx="36" cy="35" r="10" fill="#EF5350" stroke="#C62828" stroke-width="1"/><circle cx="50" cy="35" r="10" fill="#42A5F5" stroke="#1565C0" stroke-width="1"/>`) },
-      { id: 'd', label: 'Rectangle with no circles', visual: opt(`<rect x="23" y="5" width="38" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/>`) },
+      { id: 'a', label: 'Rectangle with orange circle', visual: opt(`<rect x="20" y="5" width="44" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><circle cx="42" cy="35" r="14" fill="#FF7043" stroke="#E64A19" stroke-width="1.5"/>`) },
+      { id: 'b', label: 'Rectangle with blue circle', visual: opt(`<rect x="20" y="5" width="44" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><circle cx="42" cy="35" r="14" fill="#42A5F5" stroke="#1565C0" stroke-width="1.5"/>`) },
+      { id: 'c', label: 'Rectangle with both circles', visual: opt(`<rect x="20" y="5" width="44" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><circle cx="34" cy="35" r="11" fill="#FF7043" stroke="#E64A19" stroke-width="1"/><circle cx="50" cy="35" r="11" fill="#42A5F5" stroke="#1565C0" stroke-width="1"/>`) },
+      { id: 'd', label: 'Rectangle with no circles', visual: opt(`<rect x="20" y="5" width="44" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/>`) },
     ],
     correctAnswerId: 'b',
-    explanation: 'The right (blue circle) folds onto the left (red circle). The blue circle ends up on top, covering the red circle behind it. You only see the blue circle.',
-    hint: 'Which circle is on the side that folds on top? That one will cover the other.',
+    explanation: 'The right (blue circle) folds onto the left (orange circle). Since colored paper looks the same from both sides, you see blue on top, covering the orange underneath.',
+    hint: 'Which circle is on the side that folds on top? Colored paper looks the same from both sides.',
   },
 
-  // pf-h-007: Square with colored corners (red TL, blue TR, green BL, yellow BR).
-  // Fold top-right to bottom-left diagonally. Result: triangle showing green BL corner and yellow BR area,
-  // with red on top (from TL folding over) and blue hidden.
+  // pf-h-007: Square with LARGE colored corners (red TL, blue TR, green BL, yellow BR).
+  // Fold top-right to bottom-left diagonally. Result: triangle showing green + red corners.
   {
     id: 'pf-h-007',
     category: 'paper-folding',
@@ -720,26 +723,26 @@ export const paperFolding: Question[] = [
     prompt: 'Each corner has a different color. The paper folds along the diagonal. Which colors can you see?',
     visual: qSvg(
       paper(10, 10, 140) +
-      `<polygon points="10,10 40,10 10,40" fill="#EF5350" stroke="none"/>` +
-      `<polygon points="150,10 120,10 150,40" fill="#42A5F5" stroke="none"/>` +
-      `<polygon points="10,150 40,150 10,120" fill="#66BB6A" stroke="none"/>` +
-      `<polygon points="150,150 120,150 150,120" fill="#FDD835" stroke="none"/>` +
+      `<polygon points="10,10 60,10 10,60" fill="#EF5350" stroke="none"/>` +
+      `<polygon points="150,10 100,10 150,60" fill="#42A5F5" stroke="none"/>` +
+      `<polygon points="10,150 60,150 10,100" fill="#66BB6A" stroke="none"/>` +
+      `<polygon points="150,150 100,150 150,100" fill="#FDD835" stroke="none"/>` +
       `<rect x="10" y="10" width="140" height="140" fill="none" stroke="#999" stroke-width="2"/>` +
       foldLine(150, 10, 10, 150) +
       foldArrow(130, 30, 30, 130)
     ),
     options: [
-      { id: 'a', label: 'Triangle with green and red corners', visual: opt(`<polygon points="10,8 10,62 78,62" fill="#FFF" stroke="#999" stroke-width="2"/><polygon points="10,62 25,62 10,48" fill="#66BB6A" stroke="none"/><polygon points="10,8 10,22 22,8" fill="#EF5350" stroke="none" opacity="0.7"/><polygon points="10,8 10,62 78,62" fill="none" stroke="#999" stroke-width="2"/>`) },
-      { id: 'b', label: 'Triangle with blue and yellow corners', visual: opt(`<polygon points="10,8 10,62 78,62" fill="#FFF" stroke="#999" stroke-width="2"/><polygon points="10,62 25,62 10,48" fill="#42A5F5" stroke="none"/><polygon points="10,8 10,22 22,8" fill="#FDD835" stroke="none"/>`) },
-      { id: 'c', label: 'Triangle with all 4 colors', visual: opt(`<polygon points="10,8 10,62 78,62" fill="#FFF" stroke="#999" stroke-width="2"/><polygon points="10,62 25,62 10,48" fill="#66BB6A" stroke="none"/><polygon points="10,8 10,22 22,8" fill="#EF5350" stroke="none"/><polygon points="78,62 60,62 78,48" fill="#FDD835" stroke="none"/><polygon points="45,8 55,8 45,18" fill="#42A5F5" stroke="none"/>`) },
+      { id: 'a', label: 'Green and red corners', visual: opt(`<polygon points="10,8 10,62 78,62" fill="#FFF" stroke="#999" stroke-width="2"/><polygon points="10,62 30,62 10,42" fill="#66BB6A" stroke="none"/><polygon points="10,8 10,28 28,8" fill="#EF5350" stroke="none"/><polygon points="10,8 10,62 78,62" fill="none" stroke="#999" stroke-width="2"/>`) },
+      { id: 'b', label: 'Blue and yellow corners', visual: opt(`<polygon points="10,8 10,62 78,62" fill="#FFF" stroke="#999" stroke-width="2"/><polygon points="10,62 30,62 10,42" fill="#42A5F5" stroke="none"/><polygon points="78,62 58,62 78,42" fill="#FDD835" stroke="none"/>`) },
+      { id: 'c', label: 'All four colors', visual: opt(`<polygon points="10,8 10,62 78,62" fill="#FFF" stroke="#999" stroke-width="2"/><polygon points="10,62 25,62 10,48" fill="#66BB6A" stroke="none"/><polygon points="10,8 10,23 23,8" fill="#EF5350" stroke="none"/><polygon points="78,62 63,62 78,48" fill="#FDD835" stroke="none"/><polygon points="44,8 56,8 44,20" fill="#42A5F5" stroke="none"/>`) },
       { id: 'd', label: 'Plain white triangle', visual: opt(`<polygon points="10,8 10,62 78,62" fill="#FFF" stroke="#999" stroke-width="2"/>`) },
     ],
     correctAnswerId: 'a',
-    explanation: 'Folding the top-right down to the bottom-left: the green corner (bottom-left) stays visible. The red corner (top-left) folds over but stays on the front face of the triangle. Blue and yellow end up hidden.',
+    explanation: 'Folding the top-right down to the bottom-left: the green corner (bottom-left) stays visible. The red corner (top-left) folds over but stays on the front face. Blue and yellow end up hidden.',
     hint: 'The bottom-left triangle stays as is. The top-right triangle folds over it. Which colors were in which triangle?',
   },
 
-  // pf-h-008: Square with a heart in the center. Fold in half vertically (left onto right),
+  // pf-h-008: Square with a LARGE heart in the center. Fold in half vertically (left onto right),
   // then in half horizontally (top down). Result: quarter-size square, part of heart visible in corner.
   {
     id: 'pf-h-008',
@@ -747,27 +750,27 @@ export const paperFolding: Question[] = [
     difficulty: 'hard',
     prompt: 'There is a heart in the center. The paper folds twice. Can you still see part of the heart?',
     visual: qSvg3(
-      // Panel 1: square with heart in center + fold 1 indicators
+      // Panel 1: square with large heart in center + fold 1 indicators
       paper(10, 10, 140) +
-      `<path d="M80,55 C80,40 60,35 60,50 C60,65 80,80 80,80 C80,80 100,65 100,50 C100,35 80,40 80,55 Z" fill="#E91E63" stroke="#AD1457" stroke-width="1.5"/>` +
+      `<path d="M80,48 C80,30 55,22 55,48 C55,70 80,90 80,90 C80,90 105,70 105,48 C105,22 80,30 80,48 Z" fill="#FF1493" stroke="#C2185B" stroke-width="1.5"/>` +
       `<rect x="10" y="10" width="140" height="140" fill="none" stroke="#999" stroke-width="2"/>` +
       foldLine(80, 10, 80, 150) +
       foldArrow(30, 80, 120, 80),
-      // Panel 2: tall rectangle after fold 1, half heart visible on right edge + fold 2 indicators
+      // Panel 2: tall rectangle after fold 1, half heart visible on left edge + fold 2 indicators
       `<rect x="30" y="10" width="70" height="140" fill="#FFF" stroke="#999" stroke-width="2"/>` +
-      `<path d="M30,55 C30,40 50,35 50,50 C50,65 30,80 30,80 C30,80 30,55 30,55 Z" fill="#E91E63" stroke="#AD1457" stroke-width="1" opacity="0.7"/>` +
+      `<path d="M30,48 C30,30 55,22 55,48 C55,70 30,90 30,90 Z" fill="#FF1493" stroke="#C2185B" stroke-width="1.5" opacity="0.85"/>` +
       `<rect x="30" y="10" width="70" height="140" fill="none" stroke="#999" stroke-width="2"/>` +
       foldLine(30, 80, 100, 80) +
       foldArrow(65, 30, 65, 120)
     ),
     options: [
-      { id: 'a', label: 'Small square with partial heart', visual: opt(`<rect x="20" y="10" width="45" height="45" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><path d="M20,25 C20,18 30,16 30,22 C30,30 20,36 20,36 Z" fill="#E91E63" stroke="#AD1457" stroke-width="1" opacity="0.7"/>`) },
-      { id: 'b', label: 'Small square no heart', visual: opt(`<rect x="20" y="10" width="45" height="45" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/>`) },
-      { id: 'c', label: 'Small square with full heart', visual: opt(`<rect x="20" y="10" width="45" height="45" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><path d="M42,22 C42,16 35,14 35,20 C35,26 42,30 42,30 C42,30 49,26 49,20 C49,14 42,16 42,22 Z" fill="#E91E63" stroke="#AD1457" stroke-width="1"/>`) },
-      { id: 'd', label: 'Small triangle with heart', visual: opt(`<polygon points="20,55 65,55 42,12" fill="#FFF" stroke="#999" stroke-width="2"/><path d="M42,25 C42,20 37,18 37,23 C37,28 42,32 42,32 C42,32 47,28 47,23 C47,18 42,20 42,25 Z" fill="#E91E63" stroke="#AD1457" stroke-width="1"/>`) },
+      { id: 'a', label: 'Small square with partial heart', visual: opt(`<rect x="18" y="8" width="50" height="50" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><path d="M18,30 C18,20 34,15 34,30 C34,42 18,50 18,50 Z" fill="#FF1493" stroke="#C2185B" stroke-width="1" opacity="0.85"/>`) },
+      { id: 'b', label: 'Small square no heart', visual: opt(`<rect x="18" y="8" width="50" height="50" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/>`) },
+      { id: 'c', label: 'Small square with full heart', visual: opt(`<rect x="18" y="8" width="50" height="50" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><path d="M43,22 C43,14 34,12 34,22 C34,30 43,36 43,36 C43,36 52,30 52,22 C52,12 43,14 43,22 Z" fill="#FF1493" stroke="#C2185B" stroke-width="1"/>`) },
+      { id: 'd', label: 'Small triangle with heart', visual: opt(`<polygon points="18,58 68,58 43,10" fill="#FFF" stroke="#999" stroke-width="2"/><path d="M43,25 C43,19 37,17 37,23 C37,29 43,34 43,34 C43,34 49,29 49,23 C49,17 43,19 43,25 Z" fill="#FF1493" stroke="#C2185B" stroke-width="1"/>`) },
     ],
     correctAnswerId: 'a',
-    explanation: 'The heart is in the center spanning both halves. Fold 1 (left onto right): the left half of the heart folds onto the right edge, so part of the heart is visible on the left edge of the rectangle. Fold 2 (top down): a piece of the heart is still visible in the corner of the small square.',
+    explanation: 'The heart is in the center spanning both halves. Fold 1 (left onto right): the left half of the heart folds over, so part of the heart is visible on the left edge. Fold 2 (top down): a piece of the heart is still visible in the corner of the small square.',
     hint: 'The heart is in the very center, so each fold only hides part of it. Some of the heart peeks out at the edge.',
   },
 ];
