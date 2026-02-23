@@ -323,30 +323,29 @@ export const paperFolding: Question[] = [
     hint: 'Which color is on the side that folds on top? Colored paper looks the same from both sides.',
   },
 
-  // pf-m-002: Square with wide green stripe across top (~35%). Diagonal fold TL→BR.
-  // Upper-right half (above diagonal) folds onto lower-left half. Result: lower-left triangle
-  // (right angle at BL). Green stripe from top folds over, visible as green corner at top-left.
+  // pf-m-002: Blue circle at top-left, orange circle at bottom-right. Horizontal fold (top onto bottom).
+  // Blue circle (in top half) folds on top → visible. Orange circle (in bottom half) hidden underneath.
   {
     id: 'pf-m-002',
     category: 'paper-folding',
     difficulty: 'medium',
-    prompt: 'The paper has a wide green stripe at the top. It folds along the diagonal. What does it look like?',
+    prompt: 'There is a blue circle at the top-left and an orange circle at the bottom-right. The top folds down onto the bottom. What do you see?',
     visual: qSvg(
       paper(10, 10, 140) +
-      `<rect x="10" y="10" width="140" height="50" fill="#66BB6A" stroke="none"/>` +
-      `<rect x="10" y="10" width="140" height="140" fill="none" stroke="#999" stroke-width="2"/>` +
-      foldLine(10, 10, 150, 150) +
-      foldArrow(120, 40, 40, 120)
+      `<circle cx="45" cy="45" r="20" fill="#42A5F5" stroke="#1565C0" stroke-width="1.5"/>` +
+      `<circle cx="115" cy="115" r="20" fill="#FF7043" stroke="#E64A19" stroke-width="1.5"/>` +
+      foldLine(10, 80, 150, 80) +
+      foldArrow(80, 30, 80, 120)
     ),
     options: [
-      { id: 'a', label: 'Triangle with green corner', visual: opt(`<polygon points="10,8 10,62 78,62" fill="#FFF" stroke="#999" stroke-width="2"/><polygon points="10,8 36,8 10,34" fill="#66BB6A" stroke="none"/><polygon points="10,8 10,62 78,62" fill="none" stroke="#999" stroke-width="2"/>`) },
-      { id: 'b', label: 'Triangle all green', visual: opt(`<polygon points="10,8 10,62 78,62" fill="#66BB6A" stroke="#999" stroke-width="2"/>`) },
-      { id: 'c', label: 'Plain triangle', visual: opt(`<polygon points="10,8 10,62 78,62" fill="#FFF" stroke="#999" stroke-width="2"/>`) },
-      { id: 'd', label: 'Rectangle with green stripe', visual: opt(`<rect x="10" y="15" width="70" height="40" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><rect x="10" y="15" width="70" height="14" fill="#66BB6A" stroke="none"/>`) },
+      { id: 'a', label: 'Wide rectangle with blue circle', visual: opt(`<rect x="5" y="10" width="80" height="40" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><circle cx="25" cy="30" r="11" fill="#42A5F5" stroke="#1565C0" stroke-width="1.5"/>`) },
+      { id: 'b', label: 'Wide rectangle with both circles', visual: opt(`<rect x="5" y="10" width="80" height="40" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><circle cx="25" cy="25" r="9" fill="#42A5F5" stroke="#1565C0" stroke-width="1"/><circle cx="65" cy="35" r="9" fill="#FF7043" stroke="#E64A19" stroke-width="1"/>`) },
+      { id: 'c', label: 'Wide rectangle with orange circle', visual: opt(`<rect x="5" y="10" width="80" height="40" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><circle cx="65" cy="30" r="11" fill="#FF7043" stroke="#E64A19" stroke-width="1.5"/>`) },
+      { id: 'd', label: 'Wide rectangle with no circles', visual: opt(`<rect x="5" y="10" width="80" height="40" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/>`) },
     ],
     correctAnswerId: 'a',
-    explanation: 'Folding along the diagonal creates a triangle (right angle at bottom-left). The wide green stripe from the top folds over and shows as a green corner at the top of the triangle.',
-    hint: 'The paper becomes a triangle. The green stripe was at the top — where does it end up after folding?',
+    explanation: 'The top folds down on top of the bottom. The blue circle was in the top half, so it ends up on the front — you can see it. The orange circle was in the bottom half, now hidden underneath the folded paper.',
+    hint: 'Which circle is on the half that folds on top? That one stays visible. The other gets covered.',
   },
 
   // pf-m-003: Left half yellow, red star on right half. Vertical fold (left onto right).
