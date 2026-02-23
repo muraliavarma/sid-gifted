@@ -60,6 +60,28 @@ function qSvgCut(foldPanel: string, cutPanel: string): string {
     `</svg>`;
 }
 
+/** Fold→Fold→Cut→Unfold: 4-panel layout for multi-fold-then-cut questions */
+function qSvgCut3(fold1Panel: string, fold2Panel: string, cutPanel: string): string {
+  return `<svg viewBox="0 0 400 170" xmlns="http://www.w3.org/2000/svg">` +
+    `<rect x="0" y="0" width="400" height="170" rx="16" fill="#FAFAFA"/>` +
+    `<text x="46" y="15" text-anchor="middle" font-size="10" fill="#888">Fold 1</text>` +
+    `<g transform="translate(4,20) scale(0.5)">${fold1Panel}</g>` +
+    `<line x1="86" y1="75" x2="96" y2="75" stroke="#999" stroke-width="1.5"/>` +
+    `<polygon points="94,71 101,75 94,79" fill="#999"/>` +
+    `<text x="146" y="15" text-anchor="middle" font-size="10" fill="#888">Fold 2</text>` +
+    `<g transform="translate(104,20) scale(0.5)">${fold2Panel}</g>` +
+    `<line x1="186" y1="75" x2="196" y2="75" stroke="#999" stroke-width="1.5"/>` +
+    `<polygon points="194,71 201,75 194,79" fill="#999"/>` +
+    `<text x="246" y="15" text-anchor="middle" font-size="10" fill="#888">Cut ✂</text>` +
+    `<g transform="translate(204,20) scale(0.5)">${cutPanel}</g>` +
+    `<line x1="286" y1="75" x2="296" y2="75" stroke="#999" stroke-width="1.5"/>` +
+    `<polygon points="294,71 301,75 294,79" fill="#999"/>` +
+    `<text x="350" y="15" text-anchor="middle" font-size="10" fill="#888">Unfold = ?</text>` +
+    `<rect x="310" y="28" width="80" height="80" rx="10" fill="#F0F0F0" stroke="#CCC" stroke-width="2" stroke-dasharray="8,5"/>` +
+    `<text x="350" y="80" text-anchor="middle" font-size="36" fill="#BBB" font-weight="bold">?</text>` +
+    `</svg>`;
+}
+
 function opt(inner: string): string {
   return `<svg viewBox="0 0 90 70" xmlns="http://www.w3.org/2000/svg">${inner}</svg>`;
 }
@@ -101,29 +123,33 @@ export const paperFolding: Question[] = [
   //  EASY (pf-e-001 to pf-e-006)
   // =====================================================================
 
-  // pf-e-001: Square with blue left half. Vertical fold (right onto left).
-  // Result: tall rectangle, blue on front (white folds behind blue).
+  // pf-e-001: Fold-cut-unfold. Vertical fold (right onto left). Triangular notch at fold edge.
+  // Result: diamond/rhombus hole at center of paper.
   {
     id: 'pf-e-001',
     category: 'paper-folding',
     difficulty: 'easy',
-    prompt: 'The paper is folded along the dashed line. The arrow shows the fold direction. What does it look like after folding?',
-    visual: qSvg(
+    prompt: 'The paper is folded, then a triangle is cut at the fold. What does the paper look like when you open it back up?',
+    visual: qSvgCut(
+      // Fold panel: square with vertical fold line, right folds onto left
       paper(10, 10, 140) +
-      `<rect x="10" y="10" width="70" height="140" fill="#42A5F5" stroke="none"/>` +
-      `<rect x="10" y="10" width="140" height="140" fill="none" stroke="#999" stroke-width="2"/>` +
       foldLine(80, 10, 80, 150) +
-      foldArrow(130, 30, 50, 30)
+      foldArrow(130, 30, 40, 30),
+      // Cut panel: left half with triangular V-notch from fold edge at center
+      `<path d="M10,10 L80,10 L80,55 L60,80 L80,105 L80,150 L10,150 Z" fill="#FFF" stroke="#999" stroke-width="2"/>` +
+      `<rect x="80" y="10" width="70" height="140" fill="none" stroke="#CCC" stroke-width="1" stroke-dasharray="5,3"/>` +
+      `<path d="M80,55 L60,80 L80,105" fill="none" stroke="#E53935" stroke-width="2.5" stroke-dasharray="5,3"/>` +
+      `<text x="38" y="86" font-size="20">✂</text>`
     ),
     options: [
-      { id: 'a', label: 'Tall blue rectangle', visual: opt(`<rect x="25" y="5" width="30" height="60" fill="#42A5F5" stroke="#999" stroke-width="2" rx="2"/>`) },
-      { id: 'b', label: 'Tall white rectangle', visual: opt(`<rect x="25" y="5" width="30" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/>`) },
-      { id: 'c', label: 'Triangle', visual: opt(`<polygon points="45,5 25,65 65,65" fill="#42A5F5" stroke="#999" stroke-width="2"/>`) },
-      { id: 'd', label: 'Square unchanged', visual: opt(`<rect x="15" y="5" width="60" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><rect x="15" y="5" width="30" height="60" fill="#42A5F5" stroke="none"/>`) },
+      { id: 'a', label: 'Diamond hole at center', visual: opt(`<rect x="5" y="5" width="80" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><polygon points="45,18 55,35 45,52 35,35" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/>`) },
+      { id: 'b', label: 'Triangle hole on one side', visual: opt(`<rect x="5" y="5" width="80" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><polygon points="65,22 55,35 65,48" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/>`) },
+      { id: 'c', label: 'Square hole at center', visual: opt(`<rect x="5" y="5" width="80" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><rect x="36" y="26" width="18" height="18" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/>`) },
+      { id: 'd', label: 'No hole', visual: opt(`<rect x="5" y="5" width="80" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/>`) },
     ],
     correctAnswerId: 'a',
-    explanation: 'The right (white) half folds onto the left (blue) half. The blue side faces you, so you see a tall blue rectangle.',
-    hint: 'Which color is on the outside when you fold the white side onto the blue side?',
+    explanation: 'Cutting a triangle at the fold cuts through both layers. When you unfold, the two triangles join to make a diamond shape in the center!',
+    hint: 'The fold is in the middle. The triangle cut is at the fold — what shape do two triangles make when they meet?',
   },
 
   // pf-e-002: Fold-cut-unfold. Vertical fold (right onto left). Semicircle cut at fold edge.
@@ -155,29 +181,33 @@ export const paperFolding: Question[] = [
     hint: 'The fold is in the middle. When you cut at the fold, what happens on both sides?',
   },
 
-  // pf-e-003: Square with green right half. Vertical fold (right onto left).
-  // Result: tall rectangle, green on front.
+  // pf-e-003: Fold-cut-unfold. Horizontal fold (bottom onto top). Square notch at fold edge.
+  // Result: tall rectangle hole at center of paper.
   {
     id: 'pf-e-003',
     category: 'paper-folding',
     difficulty: 'easy',
-    prompt: 'What does the paper look like after you fold it along the dashed line?',
-    visual: qSvg(
+    prompt: 'The paper is folded, then a square is cut at the fold. What does the paper look like when you open it back up?',
+    visual: qSvgCut(
+      // Fold panel: square with horizontal fold line, bottom folds onto top
       paper(10, 10, 140) +
-      `<rect x="80" y="10" width="70" height="140" fill="#66BB6A" stroke="none"/>` +
-      `<rect x="10" y="10" width="140" height="140" fill="none" stroke="#999" stroke-width="2"/>` +
-      foldLine(80, 10, 80, 150) +
-      foldArrow(130, 130, 50, 130)
+      foldLine(10, 80, 150, 80) +
+      foldArrow(30, 130, 30, 40),
+      // Cut panel: top half with square notch from fold edge at center
+      `<path d="M10,10 L150,10 L150,80 L92,80 L92,65 L68,65 L68,80 L10,80 Z" fill="#FFF" stroke="#999" stroke-width="2"/>` +
+      `<rect x="10" y="80" width="140" height="70" fill="none" stroke="#CCC" stroke-width="1" stroke-dasharray="5,3"/>` +
+      `<path d="M68,80 L68,65 L92,65 L92,80" fill="none" stroke="#E53935" stroke-width="2.5" stroke-dasharray="5,3"/>` +
+      `<text x="72" y="60" font-size="20">✂</text>`
     ),
     options: [
-      { id: 'a', label: 'Tall white rectangle', visual: opt(`<rect x="25" y="5" width="30" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/>`) },
-      { id: 'b', label: 'Wide green rectangle', visual: opt(`<rect x="10" y="20" width="70" height="35" fill="#66BB6A" stroke="#999" stroke-width="2" rx="2"/>`) },
-      { id: 'c', label: 'Tall green rectangle', visual: opt(`<rect x="25" y="5" width="30" height="60" fill="#66BB6A" stroke="#999" stroke-width="2" rx="2"/>`) },
-      { id: 'd', label: 'Half green half white rectangle', visual: opt(`<rect x="25" y="5" width="30" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><rect x="25" y="5" width="15" height="60" fill="#66BB6A" stroke="none"/>`) },
+      { id: 'a', label: 'Tall rectangle hole at center', visual: opt(`<rect x="5" y="5" width="80" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><rect x="36" y="18" width="18" height="28" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/>`) },
+      { id: 'b', label: 'Square hole in top half', visual: opt(`<rect x="5" y="5" width="80" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><rect x="36" y="12" width="18" height="14" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/>`) },
+      { id: 'c', label: 'Two separate squares', visual: opt(`<rect x="5" y="5" width="80" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><rect x="36" y="12" width="18" height="10" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/><rect x="36" y="44" width="18" height="10" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/>`) },
+      { id: 'd', label: 'No hole', visual: opt(`<rect x="5" y="5" width="80" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/>`) },
     ],
-    correctAnswerId: 'c',
-    explanation: 'The green right half folds onto the white left half. Green faces out, making a tall green rectangle.',
-    hint: 'The green side is folding on top. What color will you see?',
+    correctAnswerId: 'a',
+    explanation: 'Cutting a square at the fold cuts through both layers. When you unfold, the two squares join to make a tall rectangle hole in the center!',
+    hint: 'The fold is in the middle. A square cut at the fold goes through both layers — what shape do two squares make stacked together?',
   },
 
   // pf-e-004: Fold-cut-unfold. Horizontal fold (top onto bottom). Circle cut through both layers.
@@ -234,29 +264,33 @@ export const paperFolding: Question[] = [
     hint: 'What shape do you get when you fold a square corner-to-corner? And where does the orange end up?',
   },
 
-  // pf-e-006: Square with purple bottom half. Horizontal fold (bottom up).
-  // Result: wide rectangle, purple on front.
+  // pf-e-006: Fold-cut-unfold. Vertical fold (right onto left). Corner triangle snip at fold edge.
+  // Result: V-notch at bottom center of paper.
   {
     id: 'pf-e-006',
     category: 'paper-folding',
     difficulty: 'easy',
-    prompt: 'The bottom half folds up onto the top half. What do you see?',
-    visual: qSvg(
+    prompt: 'The paper is folded, then a corner is snipped off at the fold. What does the paper look like when you open it back up?',
+    visual: qSvgCut(
+      // Fold panel: square with vertical fold line, right folds onto left
       paper(10, 10, 140) +
-      `<rect x="10" y="80" width="140" height="70" fill="#AB47BC" stroke="none"/>` +
-      `<rect x="10" y="10" width="140" height="140" fill="none" stroke="#999" stroke-width="2"/>` +
-      foldLine(10, 80, 150, 80) +
-      foldArrow(140, 130, 140, 40)
+      foldLine(80, 10, 80, 150) +
+      foldArrow(130, 120, 40, 120),
+      // Cut panel: left half with triangle snipped from bottom-right corner (fold edge)
+      `<path d="M10,10 L80,10 L80,120 L50,150 L10,150 Z" fill="#FFF" stroke="#999" stroke-width="2"/>` +
+      `<rect x="80" y="10" width="70" height="140" fill="none" stroke="#CCC" stroke-width="1" stroke-dasharray="5,3"/>` +
+      `<line x1="80" y1="120" x2="50" y2="150" stroke="#E53935" stroke-width="2.5" stroke-dasharray="5,3"/>` +
+      `<text x="55" y="130" font-size="20">✂</text>`
     ),
     options: [
-      { id: 'a', label: 'Wide white rectangle', visual: opt(`<rect x="10" y="20" width="70" height="35" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/>`) },
-      { id: 'b', label: 'Wide purple rectangle', visual: opt(`<rect x="10" y="20" width="70" height="35" fill="#AB47BC" stroke="#999" stroke-width="2" rx="2"/>`) },
-      { id: 'c', label: 'Tall purple rectangle', visual: opt(`<rect x="25" y="5" width="35" height="60" fill="#AB47BC" stroke="#999" stroke-width="2" rx="2"/>`) },
-      { id: 'd', label: 'Half purple half white rectangle', visual: opt(`<rect x="10" y="20" width="70" height="35" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><rect x="10" y="37" width="70" height="18" fill="#AB47BC" stroke="none"/>`) },
+      { id: 'a', label: 'V-notch at bottom center', visual: opt(`<path d="M5,5 L85,5 L85,65 L58,65 L45,45 L32,65 L5,65 Z" fill="#FFF" stroke="#999" stroke-width="2"/>`) },
+      { id: 'b', label: 'Triangle at one corner only', visual: opt(`<path d="M5,5 L85,5 L85,65 L5,65 L5,45 Z" fill="#FFF" stroke="#999" stroke-width="2"/>`) },
+      { id: 'c', label: 'Large notch at bottom', visual: opt(`<path d="M5,5 L85,5 L85,65 L65,65 L45,25 L25,65 L5,65 Z" fill="#FFF" stroke="#999" stroke-width="2"/>`) },
+      { id: 'd', label: 'Paper unchanged', visual: opt(`<rect x="5" y="5" width="80" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/>`) },
     ],
-    correctAnswerId: 'b',
-    explanation: 'The purple bottom half folds up on top of the white top half. Purple faces out, so you see a wide purple rectangle.',
-    hint: 'The purple part is folding on top. What color faces you?',
+    correctAnswerId: 'a',
+    explanation: 'Snipping the corner at the fold cuts through both layers. When you unfold, you get two triangle notches meeting at the center, making a V-shape at the bottom!',
+    hint: 'The corner you snipped is at the fold. Both layers are cut, so both sides get a triangle notch.',
   },
 
   // =====================================================================
@@ -366,28 +400,33 @@ export const paperFolding: Question[] = [
     hint: 'The top folds down and hides. Which colors were on the bottom?',
   },
 
-  // pf-m-005: Square with a star in bottom-left. Vertical fold (left onto right).
-  // Result: tall rectangle, star visible on right side (transferred from back).
+  // pf-m-005: Fold-cut-unfold. Vertical fold (right onto left). Circle cut AWAY from fold edge.
+  // Result: two circle holes, symmetrically placed left and right of center.
   {
     id: 'pf-m-005',
     category: 'paper-folding',
     difficulty: 'medium',
-    prompt: 'The left side folds onto the right side. Can you still see the star?',
-    visual: qSvg(
+    prompt: 'The paper is folded, then a circle is cut through both layers (not at the fold). What does the paper look like when you open it?',
+    visual: qSvgCut(
+      // Fold panel: square with vertical fold line, right folds onto left
       paper(10, 10, 140) +
-      `<text x="40" y="135" text-anchor="middle" font-size="30">⭐</text>` +
       foldLine(80, 10, 80, 150) +
-      foldArrow(30, 80, 120, 80)
+      foldArrow(130, 30, 40, 30),
+      // Cut panel: left half rectangle with circle hole in middle, away from fold
+      `<rect x="10" y="10" width="70" height="140" fill="#FFF" stroke="#999" stroke-width="2"/>` +
+      `<rect x="80" y="10" width="70" height="140" fill="none" stroke="#CCC" stroke-width="1" stroke-dasharray="5,3"/>` +
+      `<circle cx="45" cy="80" r="15" fill="#FAFAFA" stroke="#E53935" stroke-width="2.5" stroke-dasharray="5,3"/>` +
+      `<text x="60" y="75" font-size="18">✂</text>`
     ),
     options: [
-      { id: 'a', label: 'Rectangle with star at bottom', visual: opt(`<rect x="25" y="5" width="35" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><text x="42" y="55" text-anchor="middle" font-size="16">⭐</text>`) },
-      { id: 'b', label: 'Rectangle with star at top', visual: opt(`<rect x="25" y="5" width="35" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><text x="42" y="25" text-anchor="middle" font-size="16">⭐</text>`) },
-      { id: 'c', label: 'Rectangle no star', visual: opt(`<rect x="25" y="5" width="35" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/>`) },
-      { id: 'd', label: 'Triangle with star', visual: opt(`<polygon points="42,5 25,60 60,60" fill="#FFF" stroke="#999" stroke-width="2"/><text x="42" y="47" text-anchor="middle" font-size="16">⭐</text>`) },
+      { id: 'a', label: 'Two circles, left and right', visual: opt(`<rect x="5" y="5" width="80" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><circle cx="25" cy="35" r="8" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/><circle cx="65" cy="35" r="8" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/>`) },
+      { id: 'b', label: 'One circle at center', visual: opt(`<rect x="5" y="5" width="80" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><circle cx="45" cy="35" r="10" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/>`) },
+      { id: 'c', label: 'One circle on left side', visual: opt(`<rect x="5" y="5" width="80" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><circle cx="25" cy="35" r="8" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/>`) },
+      { id: 'd', label: 'Two circles on same side', visual: opt(`<rect x="5" y="5" width="80" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><circle cx="22" cy="25" r="7" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/><circle cx="22" cy="48" r="7" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/>`) },
     ],
     correctAnswerId: 'a',
-    explanation: 'The left side folds onto the right. The star was on the left side, so when that side folds over, the star faces you at the bottom of the tall rectangle.',
-    hint: 'The left side flips onto the right. The star was on the left -- does it face you or away from you?',
+    explanation: 'The circle was cut through both layers, away from the fold. When you unfold, each layer has a hole — you get two circles, one on each side, mirrored across the center!',
+    hint: 'The circle is NOT at the fold — it is in the middle of the folded piece. Both layers get a hole. Where do the holes end up when you unfold?',
   },
 
   // pf-m-006: Square with diagonal stripe from top-left to bottom-right. Fold vertically (left onto right).
@@ -415,55 +454,62 @@ export const paperFolding: Question[] = [
     hint: 'The stripe is on both halves. When one half folds onto the other, what pattern do the two lines make?',
   },
 
-  // pf-m-007: Square with three dots in a row across the top. Horizontal fold (top down).
-  // Result: wide rectangle, dots hidden inside.
+  // pf-m-007: Fold-cut-unfold. Vertical fold (right onto left). Half-heart at fold edge.
+  // Result: full heart-shaped hole at center of paper.
   {
     id: 'pf-m-007',
     category: 'paper-folding',
     difficulty: 'medium',
-    prompt: 'There are three dots along the top. The top folds down. What do you see?',
-    visual: qSvg(
+    prompt: 'The paper is folded, then a half-heart shape is cut at the fold. What does the paper look like when you open it?',
+    visual: qSvgCut(
+      // Fold panel: square with vertical fold line, right folds onto left
       paper(10, 10, 140) +
-      `<circle cx="40" cy="35" r="10" fill="#42A5F5"/>` +
-      `<circle cx="80" cy="35" r="10" fill="#E53935"/>` +
-      `<circle cx="120" cy="35" r="10" fill="#66BB6A"/>` +
-      foldLine(10, 80, 150, 80) +
-      foldArrow(20, 30, 20, 120)
+      foldLine(80, 10, 80, 150) +
+      foldArrow(130, 120, 40, 120),
+      // Cut panel: left half with half-heart cut from fold edge
+      `<path d="M10,10 L80,10 L80,55 C80,55 80,42 65,42 C50,42 50,60 50,60 C50,75 65,90 80,100 L80,150 L10,150 Z" fill="#FFF" stroke="#999" stroke-width="2"/>` +
+      `<rect x="80" y="10" width="70" height="140" fill="none" stroke="#CCC" stroke-width="1" stroke-dasharray="5,3"/>` +
+      `<path d="M80,55 C80,42 65,42 65,42 C50,42 50,60 50,60 C50,75 65,90 80,100" fill="none" stroke="#E53935" stroke-width="2.5" stroke-dasharray="5,3"/>` +
+      `<text x="35" y="72" font-size="20">✂</text>`
     ),
     options: [
-      { id: 'a', label: 'Rectangle with three dots on top', visual: opt(`<rect x="10" y="20" width="70" height="35" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><circle cx="25" cy="30" r="5" fill="#42A5F5"/><circle cx="45" cy="30" r="5" fill="#E53935"/><circle cx="65" cy="30" r="5" fill="#66BB6A"/>`) },
-      { id: 'b', label: 'Rectangle with three dots on bottom', visual: opt(`<rect x="10" y="20" width="70" height="35" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><circle cx="25" cy="45" r="5" fill="#42A5F5"/><circle cx="45" cy="45" r="5" fill="#E53935"/><circle cx="65" cy="45" r="5" fill="#66BB6A"/>`) },
-      { id: 'c', label: 'Rectangle no dots', visual: opt(`<rect x="10" y="20" width="70" height="35" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/>`) },
-      { id: 'd', label: 'Square with three dots', visual: opt(`<rect x="15" y="5" width="60" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><circle cx="30" cy="20" r="5" fill="#42A5F5"/><circle cx="45" cy="20" r="5" fill="#E53935"/><circle cx="60" cy="20" r="5" fill="#66BB6A"/>`) },
+      { id: 'a', label: 'Heart-shaped hole at center', visual: opt(`<rect x="5" y="5" width="80" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><path d="M45,22 C45,15 35,15 35,22 C35,32 45,40 45,40 C45,40 55,32 55,22 C55,15 45,15 45,22 Z" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/>`) },
+      { id: 'b', label: 'Two separate hearts', visual: opt(`<rect x="5" y="5" width="80" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><path d="M25,22 C25,18 20,18 20,22 C20,27 25,31 25,31 C25,31 30,27 30,22 C30,18 25,18 25,22 Z" fill="#E8E8E8" stroke="#999" stroke-width="1"/><path d="M65,22 C65,18 60,18 60,22 C60,27 65,31 65,31 C65,31 70,27 70,22 C70,18 65,18 65,22 Z" fill="#E8E8E8" stroke="#999" stroke-width="1"/>`) },
+      { id: 'c', label: 'Half-heart on edge', visual: opt(`<path d="M5,5 L85,5 L85,65 L5,65 L5,40 C5,40 5,30 15,30 C25,30 25,40 25,40 C25,50 5,55 5,55 Z" fill="#FFF" stroke="#999" stroke-width="2"/>`) },
+      { id: 'd', label: 'Oval hole at center', visual: opt(`<rect x="5" y="5" width="80" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><ellipse cx="45" cy="33" rx="14" ry="10" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/>`) },
     ],
-    correctAnswerId: 'c',
-    explanation: 'The dots are on the top half. When the top folds down, the dots end up on the inside of the fold, hidden from view. You see a plain rectangle.',
-    hint: 'The dots are on the part that folds. Do they end up facing you or hidden inside?',
+    correctAnswerId: 'a',
+    explanation: 'Cutting a half-heart at the fold cuts through both layers. When you unfold, the two halves join to make a perfect heart-shaped hole in the center!',
+    hint: 'The half-heart is cut at the fold. When the paper opens, the two mirror-image halves come together — what shape do they make?',
   },
 
-  // pf-m-008: Square with blue top-left corner triangle. Fold top down.
-  // Result: wide rectangle, blue triangle hidden (was on top, folded inside).
+  // pf-m-008: Fold-cut-unfold. Diagonal fold (top-right to bottom-left). Circle cut near fold.
+  // Result: two circles mirrored across the diagonal.
   {
     id: 'pf-m-008',
     category: 'paper-folding',
     difficulty: 'medium',
-    prompt: 'There is a blue triangle in the corner. The top folds down. Can you see the blue triangle?',
-    visual: qSvg(
+    prompt: 'The paper is folded along the diagonal, then a circle is cut through both layers. What does the paper look like when you open it?',
+    visual: qSvgCut(
+      // Fold panel: square with diagonal fold, top-right folds to bottom-left
       paper(10, 10, 140) +
-      `<polygon points="10,10 70,10 10,70" fill="#42A5F5" stroke="none"/>` +
-      `<rect x="10" y="10" width="140" height="140" fill="none" stroke="#999" stroke-width="2"/>` +
-      foldLine(10, 80, 150, 80) +
-      foldArrow(140, 30, 140, 120)
+      foldLine(10, 10, 150, 150) +
+      foldArrow(120, 40, 40, 120),
+      // Cut panel: bottom-left triangle with circle cut
+      `<polygon points="10,10 10,150 150,150" fill="#FFF" stroke="#999" stroke-width="2"/>` +
+      `<polygon points="10,10 150,10 150,150" fill="none" stroke="#CCC" stroke-width="1" stroke-dasharray="5,3"/>` +
+      `<circle cx="55" cy="115" r="15" fill="#FAFAFA" stroke="#E53935" stroke-width="2.5" stroke-dasharray="5,3"/>` +
+      `<text x="70" y="112" font-size="18">✂</text>`
     ),
     options: [
-      { id: 'a', label: 'Rectangle with blue triangle', visual: opt(`<rect x="10" y="20" width="70" height="35" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><polygon points="10,20 35,20 10,45" fill="#42A5F5" stroke="none"/>`) },
-      { id: 'b', label: 'Plain rectangle', visual: opt(`<rect x="10" y="20" width="70" height="35" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/>`) },
-      { id: 'c', label: 'Triangle shape', visual: opt(`<polygon points="45,15 10,55 80,55" fill="#42A5F5" stroke="#999" stroke-width="2"/>`) },
-      { id: 'd', label: 'Rectangle with blue bottom-left', visual: opt(`<rect x="10" y="20" width="70" height="35" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><polygon points="10,55 35,55 10,35" fill="#42A5F5" stroke="none"/>`) },
+      { id: 'a', label: 'Two circles across diagonal', visual: opt(`<rect x="5" y="5" width="80" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><circle cx="28" cy="48" r="7" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/><circle cx="62" cy="20" r="7" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/>`) },
+      { id: 'b', label: 'One circle at center', visual: opt(`<rect x="5" y="5" width="80" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><circle cx="45" cy="35" r="9" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/>`) },
+      { id: 'c', label: 'Two circles on same side', visual: opt(`<rect x="5" y="5" width="80" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><circle cx="25" cy="35" r="7" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/><circle cx="25" cy="55" r="7" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/>`) },
+      { id: 'd', label: 'Oval hole', visual: opt(`<rect x="5" y="5" width="80" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><ellipse cx="45" cy="35" rx="15" ry="8" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/>`) },
     ],
-    correctAnswerId: 'b',
-    explanation: 'The blue triangle was in the top-left corner. When the top folds down, the blue triangle goes inside the fold and cannot be seen. You see a plain white rectangle.',
-    hint: 'The blue is on the part that folds over. Does it end up on the outside or inside?',
+    correctAnswerId: 'a',
+    explanation: 'The circle was cut through both layers. When you unfold along the diagonal, the two holes mirror across the diagonal line — one in the lower-left area and one in the upper-right area!',
+    hint: 'The fold is along the diagonal. The circle cut goes through both layers. When you unfold, where does the second hole appear?',
   },
 
   // =====================================================================
@@ -502,31 +548,39 @@ export const paperFolding: Question[] = [
     hint: 'Follow the red corner through each fold. After folding left onto right, where is it? Then fold that piece top-down.',
   },
 
-  // pf-h-002: Square with dots in all 4 corners. Fold in half horizontally (top down).
-  // Result: wide rectangle with 2 visible dots at bottom corners; top dots hidden inside.
+  // pf-h-002: Fold→Fold→Cut. Vertical fold + horizontal fold + circle cut away from both folds.
+  // Result: 4 circle holes in a 2×2 grid, symmetric about both center lines.
   {
     id: 'pf-h-002',
     category: 'paper-folding',
     difficulty: 'hard',
-    prompt: 'There are dots in all four corners. The top folds down. How many dots can you see?',
-    visual: qSvg(
+    prompt: 'The paper is folded twice, then a circle is cut. What does the paper look like when you unfold it completely?',
+    visual: qSvgCut3(
+      // Panel 1 (Fold 1): square with vertical fold, right onto left
       paper(10, 10, 140) +
-      `<circle cx="25" cy="25" r="10" fill="#E53935"/>` +
-      `<circle cx="135" cy="25" r="10" fill="#42A5F5"/>` +
-      `<circle cx="25" cy="135" r="10" fill="#66BB6A"/>` +
-      `<circle cx="135" cy="135" r="10" fill="#FDD835"/>` +
-      foldLine(10, 80, 150, 80) +
-      foldArrow(80, 30, 80, 120)
+      foldLine(80, 10, 80, 150) +
+      foldArrow(130, 30, 40, 30),
+      // Panel 2 (Fold 2): left-half rectangle with horizontal fold, top onto bottom
+      `<rect x="10" y="10" width="70" height="140" fill="#FFF" stroke="#999" stroke-width="2"/>` +
+      foldLine(10, 80, 80, 80) +
+      foldArrow(45, 30, 45, 120),
+      // Panel 3 (Cut): quarter-piece (top-left) with circle hole
+      `<rect x="10" y="10" width="70" height="70" fill="#FFF" stroke="#999" stroke-width="2"/>` +
+      `<rect x="80" y="10" width="70" height="70" fill="none" stroke="#CCC" stroke-width="1" stroke-dasharray="5,3"/>` +
+      `<rect x="10" y="80" width="70" height="70" fill="none" stroke="#CCC" stroke-width="1" stroke-dasharray="5,3"/>` +
+      `<rect x="80" y="80" width="70" height="70" fill="none" stroke="#CCC" stroke-width="1" stroke-dasharray="5,3"/>` +
+      `<circle cx="40" cy="40" r="12" fill="#FAFAFA" stroke="#E53935" stroke-width="2.5" stroke-dasharray="5,3"/>` +
+      `<text x="52" y="38" font-size="16">✂</text>`
     ),
     options: [
-      { id: 'a', label: 'Rectangle with 4 dots', visual: opt(`<rect x="10" y="20" width="70" height="35" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><circle cx="20" cy="27" r="5" fill="#E53935"/><circle cx="70" cy="27" r="5" fill="#42A5F5"/><circle cx="20" cy="48" r="5" fill="#66BB6A"/><circle cx="70" cy="48" r="5" fill="#FDD835"/>`) },
-      { id: 'b', label: 'Rectangle with 2 dots (green, yellow)', visual: opt(`<rect x="10" y="20" width="70" height="35" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><circle cx="20" cy="45" r="5" fill="#66BB6A"/><circle cx="70" cy="45" r="5" fill="#FDD835"/>`) },
-      { id: 'c', label: 'Rectangle with 2 dots (red, blue)', visual: opt(`<rect x="10" y="20" width="70" height="35" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><circle cx="20" cy="27" r="5" fill="#E53935"/><circle cx="70" cy="27" r="5" fill="#42A5F5"/>`) },
-      { id: 'd', label: 'Rectangle with 0 dots', visual: opt(`<rect x="10" y="20" width="70" height="35" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/>`) },
+      { id: 'a', label: 'Four circles in a grid', visual: opt(`<rect x="5" y="5" width="80" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><circle cx="25" cy="20" r="6" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/><circle cx="65" cy="20" r="6" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/><circle cx="25" cy="48" r="6" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/><circle cx="65" cy="48" r="6" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/>`) },
+      { id: 'b', label: 'Two circles', visual: opt(`<rect x="5" y="5" width="80" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><circle cx="25" cy="35" r="7" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/><circle cx="65" cy="35" r="7" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/>`) },
+      { id: 'c', label: 'One large circle', visual: opt(`<rect x="5" y="5" width="80" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><circle cx="45" cy="35" r="14" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/>`) },
+      { id: 'd', label: 'Four circles in a row', visual: opt(`<rect x="5" y="5" width="80" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><circle cx="18" cy="35" r="5" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/><circle cx="35" cy="35" r="5" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/><circle cx="52" cy="35" r="5" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/><circle cx="69" cy="35" r="5" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/>`) },
     ],
-    correctAnswerId: 'b',
-    explanation: 'The top folds down, hiding the red and blue dots (they were on top). The green and yellow dots on the bottom corners stay visible. You see 2 dots.',
-    hint: 'Which dots are on the top half and which are on the bottom? The top half folds inside.',
+    correctAnswerId: 'a',
+    explanation: 'Two folds made four layers. The circle cut goes through all four layers! When you unfold, there are four circle holes arranged in a 2×2 grid — the two folds create symmetry in both directions.',
+    hint: 'Each fold doubles the layers. Two folds = four layers. How many holes does one circle cut make through four layers?',
   },
 
   // pf-h-003: Square, fold diagonally (top-left to bottom-right) then fold the triangle in half.
@@ -558,30 +612,39 @@ export const paperFolding: Question[] = [
     hint: 'A square folded diagonally = triangle. A triangle folded in half = ?',
   },
 
-  // pf-h-004: Square with blue left half and a yellow star on the blue half.
-  // Fold left onto right. Result: tall rectangle with star visible, blue front.
+  // pf-h-004: Fold→Fold→Cut. Vertical fold + horizontal fold + triangle cut at fold intersection.
+  // Result: diamond/rhombus hole at center of paper.
   {
     id: 'pf-h-004',
     category: 'paper-folding',
     difficulty: 'hard',
-    prompt: 'The blue half has a star on it. The left side folds onto the right. What do you see?',
-    visual: qSvg(
+    prompt: 'The paper is folded twice, then a triangle is snipped from the corner where the folds meet. What does the paper look like when you unfold it?',
+    visual: qSvgCut3(
+      // Panel 1 (Fold 1): square with vertical fold, left onto right
       paper(10, 10, 140) +
-      `<rect x="10" y="10" width="70" height="140" fill="#42A5F5" stroke="none"/>` +
-      `<rect x="10" y="10" width="140" height="140" fill="none" stroke="#999" stroke-width="2"/>` +
-      `<text x="45" y="85" text-anchor="middle" font-size="30">⭐</text>` +
       foldLine(80, 10, 80, 150) +
-      foldArrow(30, 80, 120, 80)
+      foldArrow(30, 80, 120, 80),
+      // Panel 2 (Fold 2): right-half rectangle with horizontal fold, bottom onto top
+      `<rect x="80" y="10" width="70" height="140" fill="#FFF" stroke="#999" stroke-width="2"/>` +
+      foldLine(80, 80, 150, 80) +
+      foldArrow(115, 130, 115, 40),
+      // Panel 3 (Cut): quarter-piece (top-right) with triangle snip from fold-intersection corner
+      `<path d="M80,10 L150,10 L150,80 L95,80 L80,65 L80,10 Z" fill="#FFF" stroke="#999" stroke-width="2"/>` +
+      `<rect x="10" y="10" width="70" height="70" fill="none" stroke="#CCC" stroke-width="1" stroke-dasharray="5,3"/>` +
+      `<rect x="10" y="80" width="70" height="70" fill="none" stroke="#CCC" stroke-width="1" stroke-dasharray="5,3"/>` +
+      `<rect x="80" y="80" width="70" height="70" fill="none" stroke="#CCC" stroke-width="1" stroke-dasharray="5,3"/>` +
+      `<line x1="80" y1="65" x2="95" y2="80" stroke="#E53935" stroke-width="2.5" stroke-dasharray="5,3"/>` +
+      `<text x="82" y="62" font-size="16">✂</text>`
     ),
     options: [
-      { id: 'a', label: 'Blue rectangle with star', visual: opt(`<rect x="23" y="5" width="38" height="60" fill="#42A5F5" stroke="#999" stroke-width="2" rx="2"/><text x="42" y="42" text-anchor="middle" font-size="18">⭐</text>`) },
-      { id: 'b', label: 'White rectangle with star', visual: opt(`<rect x="23" y="5" width="38" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><text x="42" y="42" text-anchor="middle" font-size="18">⭐</text>`) },
-      { id: 'c', label: 'Blue rectangle no star', visual: opt(`<rect x="23" y="5" width="38" height="60" fill="#42A5F5" stroke="#999" stroke-width="2" rx="2"/>`) },
-      { id: 'd', label: 'White rectangle no star', visual: opt(`<rect x="23" y="5" width="38" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/>`) },
+      { id: 'a', label: 'Diamond hole at center', visual: opt(`<rect x="5" y="5" width="80" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><polygon points="45,22 54,35 45,48 36,35" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/>`) },
+      { id: 'b', label: 'Four small triangles', visual: opt(`<rect x="5" y="5" width="80" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><polygon points="42,32 45,27 48,32" fill="#E8E8E8" stroke="#999" stroke-width="1"/><polygon points="48,32 53,35 48,38" fill="#E8E8E8" stroke="#999" stroke-width="1"/><polygon points="42,38 45,43 48,38" fill="#E8E8E8" stroke="#999" stroke-width="1"/><polygon points="37,35 42,32 42,38" fill="#E8E8E8" stroke="#999" stroke-width="1"/>`) },
+      { id: 'c', label: 'Square hole at center', visual: opt(`<rect x="5" y="5" width="80" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><rect x="36" y="26" width="18" height="18" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/>`) },
+      { id: 'd', label: 'Single triangle at center', visual: opt(`<rect x="5" y="5" width="80" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><polygon points="45,24 52,38 38,38" fill="#E8E8E8" stroke="#999" stroke-width="1.5"/>`) },
     ],
     correctAnswerId: 'a',
-    explanation: 'The blue left half (with the star) folds onto the white right half. The blue side with the star faces you. You see a blue rectangle with a star.',
-    hint: 'The blue side with the star flips over. Which side faces you -- the blue side or the white side?',
+    explanation: 'The triangle was snipped from the corner where both folds meet — that is the center of the paper! All four layers were cut. When you unfold, the four triangles join together to make one diamond-shaped hole at the center.',
+    hint: 'The two folds meet at the center of the paper. Cutting a triangle at that corner cuts through all four layers. What shape do four triangles make when they come together?',
   },
 
   // pf-h-005: Square with stripes only on bottom half. Fold bottom up then fold left onto right.
