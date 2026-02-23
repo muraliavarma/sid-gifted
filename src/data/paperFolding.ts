@@ -324,7 +324,8 @@ export const paperFolding: Question[] = [
   },
 
   // pf-m-002: Square with wide green stripe across top (~35%). Diagonal fold TL→BR.
-  // Result: triangle with visible green corner area from the folded stripe.
+  // Upper-right half (above diagonal) folds onto lower-left half. Result: lower-left triangle
+  // (right angle at BL). Green stripe from top folds over, visible as green corner at top-left.
   {
     id: 'pf-m-002',
     category: 'paper-folding',
@@ -335,16 +336,16 @@ export const paperFolding: Question[] = [
       `<rect x="10" y="10" width="140" height="50" fill="#66BB6A" stroke="none"/>` +
       `<rect x="10" y="10" width="140" height="140" fill="none" stroke="#999" stroke-width="2"/>` +
       foldLine(10, 10, 150, 150) +
-      foldArrow(40, 30, 30, 40)
+      foldArrow(120, 40, 40, 120)
     ),
     options: [
-      { id: 'a', label: 'Triangle with green corner', visual: opt(`<polygon points="75,8 75,62 15,62" fill="#FFF" stroke="#999" stroke-width="2"/><polygon points="75,8 75,36 47,8" fill="#66BB6A" stroke="none"/><polygon points="75,8 75,62 15,62" fill="none" stroke="#999" stroke-width="2"/>`) },
-      { id: 'b', label: 'Triangle all green', visual: opt(`<polygon points="75,8 75,62 15,62" fill="#66BB6A" stroke="#999" stroke-width="2"/>`) },
-      { id: 'c', label: 'Plain triangle', visual: opt(`<polygon points="75,8 75,62 15,62" fill="#FFF" stroke="#999" stroke-width="2"/>`) },
+      { id: 'a', label: 'Triangle with green corner', visual: opt(`<polygon points="10,8 10,62 78,62" fill="#FFF" stroke="#999" stroke-width="2"/><polygon points="10,8 36,8 10,34" fill="#66BB6A" stroke="none"/><polygon points="10,8 10,62 78,62" fill="none" stroke="#999" stroke-width="2"/>`) },
+      { id: 'b', label: 'Triangle all green', visual: opt(`<polygon points="10,8 10,62 78,62" fill="#66BB6A" stroke="#999" stroke-width="2"/>`) },
+      { id: 'c', label: 'Plain triangle', visual: opt(`<polygon points="10,8 10,62 78,62" fill="#FFF" stroke="#999" stroke-width="2"/>`) },
       { id: 'd', label: 'Rectangle with green stripe', visual: opt(`<rect x="10" y="15" width="70" height="40" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><rect x="10" y="15" width="70" height="14" fill="#66BB6A" stroke="none"/>`) },
     ],
     correctAnswerId: 'a',
-    explanation: 'Folding along the diagonal creates a triangle. The wide green stripe from the top folds over and shows as a large green corner area on the result.',
+    explanation: 'Folding along the diagonal creates a triangle (right angle at bottom-left). The wide green stripe from the top folds over and shows as a green corner at the top of the triangle.',
     hint: 'The paper becomes a triangle. The green stripe was at the top — where does it end up after folding?',
   },
 
@@ -520,36 +521,36 @@ export const paperFolding: Question[] = [
   //  HARD (pf-h-001 to pf-h-008)
   // =====================================================================
 
-  // pf-h-001: Square with LARGE red corner top-left (quarter-paper). First fold: left onto right.
-  // Second fold: top down. Result: quarter-size square with red corner visible at top-right.
+  // pf-h-001: Square with red corner top-left (35px legs). Fold 1: left onto right. Fold 2: top down.
+  // After fold 1: red mirrors to top-right of tall rect. After fold 2: red ends up at bottom-right of small square.
   {
     id: 'pf-h-001',
     category: 'paper-folding',
     difficulty: 'hard',
     prompt: 'The paper folds twice! First left onto right, then top down. What do you see at the end?',
     visual: qSvg3(
-      // Panel 1: original square with LARGE red triangle top-left + fold 1 indicators
+      // Panel 1: original square with red corner top-left + fold 1 indicators
       paper(10, 10, 140) +
-      `<polygon points="10,10 80,10 10,80" fill="#EF5350" stroke="none"/>` +
+      `<polygon points="10,10 45,10 10,45" fill="#EF5350" stroke="none"/>` +
       `<rect x="10" y="10" width="140" height="140" fill="none" stroke="#999" stroke-width="2"/>` +
       foldLine(80, 10, 80, 150) +
       foldArrow(30, 80, 120, 80),
-      // Panel 2: after fold 1, tall rectangle, LARGE red triangle at top-right + fold 2 indicators
+      // Panel 2: tall rect, red triangle at top-right corner (mirrored) + fold 2 indicators
       `<rect x="30" y="10" width="70" height="140" fill="#FFF" stroke="#999" stroke-width="2"/>` +
-      `<polygon points="100,10 30,10 100,80" fill="#EF5350" stroke="none"/>` +
+      `<polygon points="100,10 65,10 100,45" fill="#EF5350" stroke="none"/>` +
       `<rect x="30" y="10" width="70" height="140" fill="none" stroke="#999" stroke-width="2"/>` +
       foldLine(30, 80, 100, 80) +
       foldArrow(65, 30, 65, 120)
     ),
     options: [
-      { id: 'a', label: 'Small square with red corner', visual: opt(`<rect x="18" y="8" width="50" height="50" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><polygon points="68,8 38,8 68,38" fill="#EF5350" stroke="none"/><rect x="18" y="8" width="50" height="50" fill="none" stroke="#999" stroke-width="2" rx="2"/>`) },
+      { id: 'a', label: 'Small square with red corner', visual: opt(`<rect x="18" y="8" width="50" height="50" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><polygon points="68,58 43,58 68,33" fill="#EF5350" stroke="none"/><rect x="18" y="8" width="50" height="50" fill="none" stroke="#999" stroke-width="2" rx="2"/>`) },
       { id: 'b', label: 'Small plain square', visual: opt(`<rect x="18" y="8" width="50" height="50" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/>`) },
       { id: 'c', label: 'Small all-red square', visual: opt(`<rect x="18" y="8" width="50" height="50" fill="#EF5350" stroke="#999" stroke-width="2" rx="2"/>`) },
-      { id: 'd', label: 'Small rectangle with red corner', visual: opt(`<rect x="12" y="15" width="60" height="38" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><polygon points="12,15 35,15 12,38" fill="#EF5350" stroke="none"/>`) },
+      { id: 'd', label: 'Small square, red at top-left', visual: opt(`<rect x="18" y="8" width="50" height="50" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><polygon points="18,8 43,8 18,33" fill="#EF5350" stroke="none"/>`) },
     ],
     correctAnswerId: 'a',
-    explanation: 'First fold: left onto right makes a tall rectangle. The large red corner from top-left mirrors to top-right. Second fold: top down makes a small square. The red corner is still visible in the top-right area.',
-    hint: 'Follow the red corner through each fold. After folding left onto right, where is it? Then fold that piece top-down.',
+    explanation: 'First fold: left onto right makes a tall rectangle. The red corner mirrors from top-left to top-right. Second fold: top down flips the top half onto the bottom — the red corner ends up at the bottom-right of the small square.',
+    hint: 'Follow the red corner through each fold. After folding left onto right, it moves to the top-right. Then folding top-down flips it to the bottom.',
   },
 
   // pf-h-002: Fold→Fold→Cut. Vertical fold + horizontal fold + circle cut away from both folds.
@@ -714,63 +715,65 @@ export const paperFolding: Question[] = [
     hint: 'Which circle is on the side that folds on top? Colored paper looks the same from both sides.',
   },
 
-  // pf-h-007: Square with LARGE colored corners (red TL, blue TR, green BL, yellow BR).
-  // Fold top-right to bottom-left diagonally. Result: triangle showing green + red corners.
+  // pf-h-007: Square with colored corners (red TL, blue TR, green BL, yellow BR).
+  // Vertical fold: right onto left. Blue mirrors onto red (covers it), yellow mirrors onto green (covers it).
+  // Result: tall rectangle with blue at TL and yellow at BL.
   {
     id: 'pf-h-007',
     category: 'paper-folding',
     difficulty: 'hard',
-    prompt: 'Each corner has a different color. The paper folds along the diagonal. Which colors can you see?',
+    prompt: 'Each corner has a different color. The right side folds onto the left. Which colors can you see?',
     visual: qSvg(
       paper(10, 10, 140) +
-      `<polygon points="10,10 60,10 10,60" fill="#EF5350" stroke="none"/>` +
-      `<polygon points="150,10 100,10 150,60" fill="#42A5F5" stroke="none"/>` +
-      `<polygon points="10,150 60,150 10,100" fill="#66BB6A" stroke="none"/>` +
-      `<polygon points="150,150 100,150 150,100" fill="#FDD835" stroke="none"/>` +
+      `<polygon points="10,10 55,10 10,55" fill="#EF5350" stroke="none"/>` +
+      `<polygon points="150,10 105,10 150,55" fill="#42A5F5" stroke="none"/>` +
+      `<polygon points="10,150 55,150 10,105" fill="#66BB6A" stroke="none"/>` +
+      `<polygon points="150,150 105,150 150,105" fill="#FDD835" stroke="none"/>` +
       `<rect x="10" y="10" width="140" height="140" fill="none" stroke="#999" stroke-width="2"/>` +
-      foldLine(150, 10, 10, 150) +
-      foldArrow(130, 30, 30, 130)
+      foldLine(80, 10, 80, 150) +
+      foldArrow(130, 80, 40, 80)
     ),
     options: [
-      { id: 'a', label: 'Green and red corners', visual: opt(`<polygon points="10,8 10,62 78,62" fill="#FFF" stroke="#999" stroke-width="2"/><polygon points="10,62 30,62 10,42" fill="#66BB6A" stroke="none"/><polygon points="10,8 10,28 28,8" fill="#EF5350" stroke="none"/><polygon points="10,8 10,62 78,62" fill="none" stroke="#999" stroke-width="2"/>`) },
-      { id: 'b', label: 'Blue and yellow corners', visual: opt(`<polygon points="10,8 10,62 78,62" fill="#FFF" stroke="#999" stroke-width="2"/><polygon points="10,62 30,62 10,42" fill="#42A5F5" stroke="none"/><polygon points="78,62 58,62 78,42" fill="#FDD835" stroke="none"/>`) },
-      { id: 'c', label: 'All four colors', visual: opt(`<polygon points="10,8 10,62 78,62" fill="#FFF" stroke="#999" stroke-width="2"/><polygon points="10,62 25,62 10,48" fill="#66BB6A" stroke="none"/><polygon points="10,8 10,23 23,8" fill="#EF5350" stroke="none"/><polygon points="78,62 63,62 78,48" fill="#FDD835" stroke="none"/><polygon points="44,8 56,8 44,20" fill="#42A5F5" stroke="none"/>`) },
-      { id: 'd', label: 'Plain white triangle', visual: opt(`<polygon points="10,8 10,62 78,62" fill="#FFF" stroke="#999" stroke-width="2"/>`) },
+      { id: 'a', label: 'Blue and yellow corners', visual: opt(`<rect x="22" y="5" width="40" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><polygon points="22,5 40,5 22,23" fill="#42A5F5" stroke="none"/><polygon points="22,65 40,65 22,47" fill="#FDD835" stroke="none"/><rect x="22" y="5" width="40" height="60" fill="none" stroke="#999" stroke-width="2" rx="2"/>`) },
+      { id: 'b', label: 'Red and green corners', visual: opt(`<rect x="22" y="5" width="40" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><polygon points="22,5 40,5 22,23" fill="#EF5350" stroke="none"/><polygon points="22,65 40,65 22,47" fill="#66BB6A" stroke="none"/>`) },
+      { id: 'c', label: 'All four colors', visual: opt(`<rect x="22" y="5" width="40" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><polygon points="22,5 34,5 22,17" fill="#EF5350" stroke="none"/><polygon points="62,5 50,5 62,17" fill="#42A5F5" stroke="none"/><polygon points="22,65 34,65 22,53" fill="#66BB6A" stroke="none"/><polygon points="62,65 50,65 62,53" fill="#FDD835" stroke="none"/>`) },
+      { id: 'd', label: 'Plain white rectangle', visual: opt(`<rect x="22" y="5" width="40" height="60" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/>`) },
     ],
     correctAnswerId: 'a',
-    explanation: 'Folding the top-right down to the bottom-left: the green corner (bottom-left) stays visible. The red corner (top-left) folds over but stays on the front face. Blue and yellow end up hidden.',
-    hint: 'The bottom-left triangle stays as is. The top-right triangle folds over it. Which colors were in which triangle?',
+    explanation: 'The right side folds onto the left. Blue (top-right) lands on top of red (top-left), covering it. Yellow (bottom-right) lands on top of green (bottom-left), covering it. You see blue and yellow since colored paper looks the same from both sides.',
+    hint: 'The right side folds on top. Which colors were on the right? They cover the colors on the left.',
   },
 
-  // pf-h-008: Square with a LARGE heart in the center. Fold in half vertically (left onto right),
-  // then in half horizontally (top down). Result: quarter-size square, part of heart visible in corner.
+  // pf-h-008: Square with a purple diamond in the center. Fold 1: left onto right. Fold 2: top down.
+  // Diamond is centered on both fold lines. After fold 1: half-diamond on left edge of tall rect.
+  // After fold 2: quarter-diamond triangle at top-left corner of small square.
   {
     id: 'pf-h-008',
     category: 'paper-folding',
     difficulty: 'hard',
-    prompt: 'There is a heart in the center. The paper folds twice. Can you still see part of the heart?',
+    prompt: 'There is a purple diamond in the center. The paper folds twice. What do you see at the end?',
     visual: qSvg3(
-      // Panel 1: square with large heart in center + fold 1 indicators
+      // Panel 1: square with purple diamond centered at (80,80) + fold 1 indicators
       paper(10, 10, 140) +
-      `<path d="M80,48 C80,30 55,22 55,48 C55,70 80,90 80,90 C80,90 105,70 105,48 C105,22 80,30 80,48 Z" fill="#FF1493" stroke="#C2185B" stroke-width="1.5"/>` +
+      `<polygon points="80,45 115,80 80,115 45,80" fill="#9C27B0" stroke="#7B1FA2" stroke-width="1.5"/>` +
       `<rect x="10" y="10" width="140" height="140" fill="none" stroke="#999" stroke-width="2"/>` +
       foldLine(80, 10, 80, 150) +
       foldArrow(30, 80, 120, 80),
-      // Panel 2: tall rectangle after fold 1, half heart visible on left edge + fold 2 indicators
+      // Panel 2: tall rect, half-diamond (right-pointing triangle) on left edge + fold 2 indicators
       `<rect x="30" y="10" width="70" height="140" fill="#FFF" stroke="#999" stroke-width="2"/>` +
-      `<path d="M30,48 C30,30 55,22 55,48 C55,70 30,90 30,90 Z" fill="#FF1493" stroke="#C2185B" stroke-width="1.5" opacity="0.85"/>` +
+      `<polygon points="30,45 65,80 30,115" fill="#9C27B0" stroke="#7B1FA2" stroke-width="1.5"/>` +
       `<rect x="30" y="10" width="70" height="140" fill="none" stroke="#999" stroke-width="2"/>` +
       foldLine(30, 80, 100, 80) +
       foldArrow(65, 30, 65, 120)
     ),
     options: [
-      { id: 'a', label: 'Small square with partial heart', visual: opt(`<rect x="18" y="8" width="50" height="50" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><path d="M18,30 C18,20 34,15 34,30 C34,42 18,50 18,50 Z" fill="#FF1493" stroke="#C2185B" stroke-width="1" opacity="0.85"/>`) },
-      { id: 'b', label: 'Small square no heart', visual: opt(`<rect x="18" y="8" width="50" height="50" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/>`) },
-      { id: 'c', label: 'Small square with full heart', visual: opt(`<rect x="18" y="8" width="50" height="50" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><path d="M43,22 C43,14 34,12 34,22 C34,30 43,36 43,36 C43,36 52,30 52,22 C52,12 43,14 43,22 Z" fill="#FF1493" stroke="#C2185B" stroke-width="1"/>`) },
-      { id: 'd', label: 'Small triangle with heart', visual: opt(`<polygon points="18,58 68,58 43,10" fill="#FFF" stroke="#999" stroke-width="2"/><path d="M43,25 C43,19 37,17 37,23 C37,29 43,34 43,34 C43,34 49,29 49,23 C49,17 43,19 43,25 Z" fill="#FF1493" stroke="#C2185B" stroke-width="1"/>`) },
+      { id: 'a', label: 'Small square with purple corner', visual: opt(`<rect x="18" y="8" width="50" height="50" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><polygon points="18,8 43,8 18,33" fill="#9C27B0" stroke="#7B1FA2" stroke-width="1"/><rect x="18" y="8" width="50" height="50" fill="none" stroke="#999" stroke-width="2" rx="2"/>`) },
+      { id: 'b', label: 'Small square no purple', visual: opt(`<rect x="18" y="8" width="50" height="50" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/>`) },
+      { id: 'c', label: 'Small square with full diamond', visual: opt(`<rect x="18" y="8" width="50" height="50" fill="#FFF" stroke="#999" stroke-width="2" rx="2"/><polygon points="43,16 56,33 43,50 30,33" fill="#9C27B0" stroke="#7B1FA2" stroke-width="1"/>`) },
+      { id: 'd', label: 'Small triangle', visual: opt(`<polygon points="18,58 68,58 43,10" fill="#FFF" stroke="#999" stroke-width="2"/>`) },
     ],
     correctAnswerId: 'a',
-    explanation: 'The heart is in the center spanning both halves. Fold 1 (left onto right): the left half of the heart folds over, so part of the heart is visible on the left edge. Fold 2 (top down): a piece of the heart is still visible in the corner of the small square.',
-    hint: 'The heart is in the very center, so each fold only hides part of it. Some of the heart peeks out at the edge.',
+    explanation: 'The diamond is centered right where both folds cross. Fold 1 (left onto right): the left half of the diamond folds onto the right half, leaving a half-diamond on the left edge. Fold 2 (top down): the top half folds down, leaving a quarter-diamond triangle at the top-left corner.',
+    hint: 'The diamond sits right at the center where the two folds cross. Each fold cuts the visible part in half. What is left after two folds?',
   },
 ];
